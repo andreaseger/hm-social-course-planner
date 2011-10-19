@@ -225,6 +225,7 @@ DEPENDENCIES
   jquery-rails
   mocha
   modernizr-rails
+  nokogiri
   pry
   rails (= 3.1.0)
   rspec-rails

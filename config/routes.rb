@@ -1,4 +1,6 @@
 SocialCoursePlanner::Application.routes.draw do
+  resources :schedules
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
