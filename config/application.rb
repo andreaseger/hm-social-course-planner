@@ -43,7 +43,12 @@ module SocialCoursePlanner
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [:password]    # Do not generate test files
+    config.generators do |g| 
+      g.test_framework :rspec, :views => false
+      g.integration_tool false
+    end
+
 
     # Enable the asset pipeline
     config.assets.enabled = true
