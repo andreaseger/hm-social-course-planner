@@ -1,0 +1,10 @@
+  rvm:
+    - ree
+    - 1.9.2
+    - 1.9.3
+  before_script:
+    - "mv config/database.example config/database.yml"
+    - "bundle exec rake db:migrate"
+  notifications:
+    email:
+      - dev@eger.lc
