@@ -8,5 +8,6 @@ class CreateRooms < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :rooms, :name, {unique: true}
   end
 end
