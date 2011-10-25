@@ -6,32 +6,44 @@ namespace :data do
 
     [Room, Course, Teacher, Timeslot, Booking].each {|e| e.delete_all }
 
-    load_bookings.each do |booking|
-      next if booking[:room].empty?
-      room = Room.find_by_name(booking[:room]) || Room.create(name: booking[:room], label: booking[:room].upcase.insert(2,'.'), building: booking[:room][0], floor: booking[:room][1])
+    begin
+    fetch_timetables.each do |booking|
+      tmp = booking.xpath('room').text
+      next if tmp.empty?
+      room = Room.find_by_name(tmp) || Room.create(name: tmp, label: tmp.upcase.insert(2,'.'), building: tmp[0], floor: tmp[1])
 
-      booking[:courses].each do |c|
-        course_conditions = { name: c[:modul], group: c[:group] }
-        course = Course.find(:first, conditions: course_conditions ) || Course.create(course_conditions.merge(label: get_modul_label(c[:modul])))
-        c[:teachers].each do |t|
-          teacher = Teacher.find_by_name(t) || Teacher.create(name: t, label: get_teacher_name(t) )
+      booking.xpath('courses/course').each do |c|
+        tmp = c.xpath('modul').text
+        course = Course.find_by_name(tmp) || Course.create(name: tmp, label: get_modul_label(tmp) )
 
-          day = Day.find_by_name booking[:day]
-          time_conditions = { start_label: booking[:starttime], end_label: booking[:endtime], day_id: day.id }
+        c.xpath('teacher').each do |t|
+          tmp = t.text
+          teacher = Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
+
+          day = Day.find_by_name(booking.xpath('weekday').text)
+          binding.pry if day.nil?
+          time_conditions = { start_label: booking.xpath('starttime').text,
+                              end_label: booking.xpath('stoptime').text,
+                              day_id: day.id }
           time = Timeslot.find(:first, conditions: time_conditions ) || Timeslot.create( time_conditions )
 
           conditions ={
                         room_id: room.id,
                         timeslot_id: time.id,
                         course_id: course.id,
-                        teacher_id: teacher.id
+                        teacher_id: teacher.id,
+                        group: c.xpath('group').text
                       }
-          unless Booking.find(:first, conditions: conditions)
-            Booking.create(conditions)
+          unless Booking.find( :first, conditions: conditions )
+            Booking.create( conditions.merge( suffix: booking.xpath('suffix').text ) )
             p "[create: ]#{conditions}"
           end
         end
       end
+    end
+    rescue => e
+      p "[task:] #{e.message}"
+      p e.backtrace
     end
   end
 
@@ -43,31 +55,16 @@ namespace :data do
     #[Booking, Room, Timeslot, Course, Teacher].each {|m| m.delete_if{|e| e.orphan} }
   end
 
-  def load_bookings
-    xml = ''
+  def fetch_timetables
+    xml = nil
     Timeout::timeout(5) do
       net = Net::HTTP.get_response(URI.parse('http://fi.cs.hm.edu/fi/rest/public/timetable/group.xml'))
       raise "HTTP Error: #{net.code}" if %w(404 500).include? net.code
       xml = Nokogiri::XML(net.body)
     end
-    xml.xpath('/list/timetable/day/time/booking').map do |e|
-      {
-        starttime: e.xpath('starttime').text,
-        endtime: e.xpath('stoptime').text,
-        day: e.xpath('weekday').text,
-        room: e.xpath('room').text,
-        suffix: e.xpath('suffix').text,
-        courses: e.xpath('courses/course').map do |c|
-          {
-            modul: c.xpath('modul').text,
-            group: c.xpath('group').text,
-            teachers: c.xpath('teacher').map{|t| t.text }
-          }
-        end
-      }
-    end
+    return xml.xpath('/list/timetable/day/time/booking')
   rescue => e
-    p e.message
+    p "[fetch_timetables:] #{e.message}"
     p e.backtrace
   end
 
@@ -80,7 +77,7 @@ namespace :data do
     end
     xml.xpath('/modul/name').first.text
   rescue => e
-    p e.message
+    p "[get_modul_label:] #{e.message}"
     p e.backtrace
   end
 
@@ -95,7 +92,7 @@ namespace :data do
 
     "#{person.xpath('title')} #{person.xpath('firstname')} #{person.xpath('lastname')}"
   rescue => e
-    p e.message
+    p "[get_teacher_name:] #{e.message}"
     p e.backtrace
   end
 end
