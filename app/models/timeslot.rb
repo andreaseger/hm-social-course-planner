@@ -1,8 +1,7 @@
 class Timeslot < ActiveRecord::Base
-  has_many :bookings
+  belongs_to :day, dependent: :destroy
+  has_many :bookings, dependent: :destroy
   has_many :courses, through: :bookings
   has_many :rooms, through: :bookings
-  has_many :schedules, through: :bookings
   has_many :teachers, through: :bookings
-  belongs_to :day
 end

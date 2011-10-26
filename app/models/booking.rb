@@ -1,7 +1,9 @@
 class Booking < ActiveRecord::Base
-  belongs_to :schedule
-  belongs_to :course
-  belongs_to :room
-  belongs_to :teacher
-  belongs_to :timeslot
+  has_many :lectureships, dependent: :destroy
+  has_many :teachers, through: :lectureships, dependent: :destroy
+
+  belongs_to :course, dependent: :destroy
+  belongs_to :room, dependent: :destroy
+  belongs_to :timeslot, dependent: :destroy
+  belongs_to :group, dependent: :destroy
 end

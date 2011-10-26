@@ -11,28 +11,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111024112507) do
+ActiveRecord::Schema.define(:version => 20111025145636) do
 
   create_table "bookings", :force => true do |t|
-    t.integer  "schedule_id"
-    t.integer  "room_id"
-    t.integer  "teacher_id"
-    t.integer  "timeslot_id"
-    t.integer  "weekday_id"
     t.integer  "course_id"
+    t.integer  "timeslot_id"
+    t.integer  "room_id"
+    t.integer  "group_id"
+    t.string   "suffix"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "bookings", ["course_id"], :name => "index_bookings_on_course_id"
+  add_index "bookings", ["group_id"], :name => "index_bookings_on_group_id"
+  add_index "bookings", ["room_id"], :name => "index_bookings_on_room_id"
+  add_index "bookings", ["timeslot_id"], :name => "index_bookings_on_timeslot_id"
 
   create_table "courses", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.string   "group"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "courses", ["group"], :name => "index_courses_on_group"
   add_index "courses", ["name"], :name => "index_courses_on_name", :unique => true
 
   create_table "days", :force => true do |t|
@@ -45,6 +47,21 @@ ActiveRecord::Schema.define(:version => 20111024112507) do
 
   add_index "days", ["name"], :name => "index_days_on_name", :unique => true
 
+  create_table "groups", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true
+
+  create_table "lectureships", :force => true do |t|
+    t.integer "booking_id"
+    t.integer "teacher_id"
+  end
+
+  add_index "lectureships", ["booking_id", "teacher_id"], :name => "index_lectureships_on_booking_id_and_teacher_id", :unique => true
+
   create_table "rooms", :force => true do |t|
     t.string   "name"
     t.string   "label"
@@ -55,14 +72,6 @@ ActiveRecord::Schema.define(:version => 20111024112507) do
   end
 
   add_index "rooms", ["name"], :name => "index_rooms_on_name", :unique => true
-
-  create_table "schedules", :force => true do |t|
-    t.string   "name"
-    t.string   "label"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "teachers", :force => true do |t|
     t.string   "name"
