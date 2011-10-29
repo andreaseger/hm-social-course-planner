@@ -6,58 +6,53 @@ namespace :data do
 
     p "[INFO] starting"
 
-    p "[INFO] deleting old data"
-    [Room, Course, Teacher, Timeslot, Booking, Group].each {|e| e.delete_all }
-
-    i=0
-    begin
-    fetch_timetables.each do |booking|
-      tmp = booking.xpath('room').text
-      next if tmp.empty?
-      room = Room.find_by_name(tmp) || Room.create(name: tmp, label: tmp.upcase.insert(2,'.'), building: tmp[0], floor: tmp[1])
-
-      booking.xpath('courses/course').each do |c|
-        tmp = c.xpath('modul').text
-        course = Course.find_by_name(tmp) || Course.create(name: tmp, label: get_modul_label(tmp) )
-
-        day = Day.find_by_name(booking.xpath('weekday').text)
-        binding.pry if day.nil?
-        time_conditions = { start_label: booking.xpath('starttime').text,
-                            end_label: booking.xpath('stoptime').text,
-                            day_id: day.id }
-        time = Timeslot.find(:first, conditions: time_conditions ) || Timeslot.create( time_conditions )
-
-        group = Group.find_or_create_by_name(c.xpath('group').text)
-        conditions ={
-                      room_id: room.id,
-                      timeslot_id: time.id,
-                      course_id: course.id,
-                      group_id: group.id
-                    }
-        b = Booking.find( :first, conditions: conditions )
-        if b.nil?
-          b = Booking.create( conditions.merge( suffix: booking.xpath('suffix').text ) )
-          p "[INFO] new booking created"
-        end
-        c.xpath('teacher').each do |t|
-          tmp = t.text
-          teacher = Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
-          b.teachers << teacher unless b.teachers.include?(teacher)
-        end
-
-        #c.xpath('teacher').each do |t|
-        #  tmp = t.text
-        #  teacher = Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
-        #end
-        #unless Booking.find( :first, conditions: conditions )
-        #  Booking.create( conditions.merge( suffix: booking.xpath('suffix').text ) )
-        #  p "[create: ]#{conditions}"
-        #end
-      end
-    end
-    [Booking, Teacher, Room, Course, Group, Timeslot].each do |c|
+    p "[INFO] deleting old bookings"
+    Booking.destroy_all
+    [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
       p "[INFO] #{c.count} #{c.to_s.pluralize}"
     end
+
+    begin
+      fetch_timetables.each do |booking|
+        tmp = booking.xpath('room').text
+        next if tmp.empty?
+        room = Room.find_by_name(tmp) || Room.create(name: tmp, label: tmp.upcase.insert(2,'.'), building: tmp[0], floor: tmp[1])
+
+        booking.xpath('courses/course').each do |c|
+          tmp = c.xpath('modul').text
+          course = Course.find_by_name(tmp) || Course.create(name: tmp, label: get_modul_label(tmp) )
+
+          day = Day.find_by_name(booking.xpath('weekday').text)
+          binding.pry if day.nil?
+          time_conditions = { start_label: booking.xpath('starttime').text,
+                              end_label: booking.xpath('stoptime').text,
+                              day_id: day.id }
+          time = Timeslot.find(:first, conditions: time_conditions ) || Timeslot.create( time_conditions.merge( start_time: booking.xpath('starttime').text.gsub(':','').to_i,
+                                                                                                                end_time: booking.xpath('stoptime').text.gsub(':','').to_i ) )
+
+          group = Group.find_or_create_by_name(c.xpath('group').text)
+          conditions ={
+                        room_id: room.id,
+                        timeslot_id: time.id,
+                        course_id: course.id,
+                        group_id: group.id,
+                        suffix: booking.xpath('suffix').text
+                      }
+          b = Booking.find( :first, conditions: conditions )
+          if b.nil?
+            b = Booking.create( conditions )
+            p "[INFO] new booking created"
+          end
+          c.xpath('teacher').each do |t|
+            tmp = t.text
+            teacher = Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
+            b.teachers << teacher unless b.teachers.include?(teacher)
+          end
+        end
+      end
+      [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
+        p "[INFO] #{c.count} #{c.to_s.pluralize}"
+      end
     rescue => e
       p "[ERROR] main: #{e.message}"
       p e.backtrace

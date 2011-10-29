@@ -3,4 +3,9 @@ class Room < ActiveRecord::Base
   has_many :courses, through: :bookings
   has_many :teachers, through: :bookings
   has_many :timeslots, through: :bookings
+
+  validates :name, presence: true, uniqueness: true
+  validates :label, presence: true
+  validates :building, presence: true
+  validates :floor, presence: true
 end
