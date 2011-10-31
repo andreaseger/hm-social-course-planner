@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111025145636) do
+ActiveRecord::Schema.define(:version => 20111031135022) do
 
   create_table "bookings", :force => true do |t|
     t.integer  "course_id"
@@ -28,6 +28,11 @@ ActiveRecord::Schema.define(:version => 20111025145636) do
   add_index "bookings", ["room_id"], :name => "index_bookings_on_room_id"
   add_index "bookings", ["timeslot_id"], :name => "index_bookings_on_timeslot_id"
 
+  create_table "bookings_schedules", :id => false, :force => true do |t|
+    t.integer "booking_id"
+    t.integer "schedule_id"
+  end
+
   create_table "courses", :force => true do |t|
     t.string   "name"
     t.string   "label"
@@ -40,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20111025145636) do
   create_table "days", :force => true do |t|
     t.string   "name"
     t.string   "label"
+    t.integer  "number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -71,6 +77,12 @@ ActiveRecord::Schema.define(:version => 20111025145636) do
   end
 
   add_index "rooms", ["name"], :name => "index_rooms_on_name", :unique => true
+
+  create_table "schedules", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "teachers", :force => true do |t|
     t.string   "name"
