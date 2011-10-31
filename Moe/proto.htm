@@ -1,0 +1,101 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+</head>
+	<body>
+		<div id="content">
+			
+		</div>
+
+		<script type="text/javascript" src="jquery-1.6.4.js"></script>
+		<script type="text/javascript">
+			$(function()
+			{
+				createSchedule();
+			}
+			);
+			
+			function createSchedule() {
+				var json = 
+				  [
+					{"id":0,
+					 "label": "Montag",
+					 "timeslots": [
+					  {"id":0,
+					   "label": "8:00",
+					   "bookings": [
+						{"id":12312,
+						 "label": "Web Engineering",
+						 "teacher": {"name": "hammerschallulrike", "label":"Prof Dr Foo Bar"},
+						 "modul": {"name": "softwareentwicklungi", "label":"Softwareentwicklung"},
+						 "room": {"name": "r0011", "label":"R0.011"},
+						 "suffix": "Praktikum, 2. Teilgruppe",
+						 "conflict": true,
+						 "attending": false
+						}
+					   ]
+					  }
+					 ]
+					},
+					{"id":1,
+					 "label": "Dienstag",
+					 "timeslots": [
+					  {"id":1,
+					   "label": "10:00",
+					   "bookings": [
+						{"id":1231244,
+						 "label": "Web Engineering",
+						 "teacher": {"name": "hammerschallulrike", "label":"Prof Dr Foo Bar"},
+						 "modul": {"name": "softwareentwicklungi", "label":"Softwareentwicklung"},
+						 "room": {"name": "r0011", "label":"R0.011"},
+						 "suffix": "Praktikum, 2. Teilgruppe",
+						 "conflict": true,
+						 "attending": false
+						}
+					   ]
+					  }
+					 ]
+					}					
+				  ];
+				  
+				  for(var dayIndex = 0; dayIndex < json.length; dayIndex++) {
+					var day = json[dayIndex];
+					appendDay(day);
+				  }
+			}
+			
+			function appendDay(day) {
+				$("#content").append("<div id=\"day-" + day.id + "\"><h2>" + day.label + "</h2></div>");
+				
+				for(var timeslotIndex = 0; timeslotIndex < day.timeslots.length; timeslotIndex++) {
+					var timeslot = day.timeslots[timeslotIndex];					
+					appendTimeslot(day, timeslot);
+				}				
+			}
+			
+			function appendTimeslot(day, timeslot) {
+				var element = "<div id=\"timeslot-" + day.id + "-" + timeslot.id + "\">";
+				element += "<h3>" + timeslot.label + "</h3>";
+				element += "</div>";				
+				$("#day-" + day.id).append(element);
+				
+				for(var bookingIndex = 0; bookingIndex < timeslot.bookings.length; bookingIndex++) {
+					var booking = timeslot.bookings[bookingIndex];
+					appendBooking(day, timeslot, booking);
+				}
+			}
+			
+			function appendBooking(day, timeslot, booking) {
+				var element = "<div id=\"booking-" + booking.id + "\">";
+				element += "<h4>" + booking.label + "</h4>";
+				element += "<p>" + booking.suffix + "</h4>";
+				element += "<p class=\"teacher\"><a href=\"http://fi.cs.hm.edu/fi/rest/public/timetable/name/" + booking.teacher.name + "\">" + booking.teacher.label + "</a></p>";
+				element += "<p class=\"module\"><a href=\"http://fi.cs.hm.edu/fi/rest/public/modul/title/" + booking.modul.name + "\">" + booking.modul.label + "</a></p>";
+				element += "<p class=\"room\"><a href=\"http://fi.cs.hm.edu/fi/rest/public/timetable/room/" + booking.room.name + "\">" + booking.room.label + "</a></p>";
+				element += "</div>";
+				
+				$("#timeslot-" + day.id + "-" + timeslot.id).append(element);				
+			}
+		</script>
+	</body>
+</html>
