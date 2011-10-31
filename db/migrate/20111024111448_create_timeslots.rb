@@ -5,7 +5,7 @@ class CreateTimeslots < ActiveRecord::Migration
       t.integer :end_time
       t.string :start_label
       t.string :end_label
-      t.integer :day_id
+      t.belongs_to :day
 
       t.timestamps
     end

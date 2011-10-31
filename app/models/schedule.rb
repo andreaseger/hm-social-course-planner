@@ -1,6 +1,3 @@
 class Schedule < ActiveRecord::Base
-  has_many :bookings
-  has_many :courses, through: :bookings
-  has_many :rooms, through: :bookings
-  has_many :teachers, through: :bookings
+  has_and_belongs_to_many :bookings
 end
