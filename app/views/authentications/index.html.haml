@@ -1,0 +1,23 @@
+- if @authentications
+  - unless @authentications.empty?
+    %p
+      %strong You can sign in to this account using:
+    .authentications
+      - for authentication in @authentications
+        .authentication
+          = image_tag "authbuttons/#{authentication.provider}_32.png", :size => "32x32"
+          .provider= authentication.provider.titleize
+          .uid= authentication.uid
+          = link_to "X", authentication, :confirm => 'Are you sure you want to remove this authentication option?', :method => :delete, :class => "remove"
+      .clear
+  %p
+    %strong Add another service to sign in with:
+- else
+  %p
+    %strong Sign in through one of these services:
+
+-%w(identity open_id github developer).each do |provider|
+  = link_to "/auth/#{provider}", {:class => 'auth_provider'} do
+    = image_tag "authbuttons/#{provider}_64.png", :size => "64x64", :alt => "#{provider == 'open_id' ? 'OpenID' : provider.titleize}"
+    = provider == 'open_id' ? 'OpenID' : provider.titleize
+.clear
