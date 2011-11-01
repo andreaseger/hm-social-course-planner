@@ -1,5 +1,9 @@
 SocialCoursePlanner::Application.routes.draw do
-  resources :users
+  resource :user
+  #resources :users do
+  #  get ':username', action: :show, on: :collection
+  #end
+
   resources :sessions
   resources :authentications
   match '/auth/:provider/callback' => 'sessions#create'
