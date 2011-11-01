@@ -25,9 +25,21 @@
   .container
     #nav
       %nav
+        %li
+          = link_to 'Groups', groups_url
+        -if signed_in?
+          %li
+            = link_to 'Linked Accounts', authentications_url
+          %li
+            = link_to 'Logout', logout_url
+        -else
+          %li
+            = link_to 'LogIn', login_url
+
     -if notice
       %p#notice= notice
     %div{:role => "main", :id => "main"}
+      = session
       = yield
     %footer#footer
   = javascript_include_tag "application"

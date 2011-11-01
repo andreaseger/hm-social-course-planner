@@ -4,14 +4,15 @@ namespace :data do
     require 'net/http'
     require "nokogiri"
 
-    p "[INFO] starting"
+    print "[INFO] starting\n"
 
-    p "[INFO] deleting old bookings"
+    print "[INFO] deleting old bookings\n"
     Booking.destroy_all
     [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
-      p "[INFO] #{c.count} #{c.to_s.pluralize}"
+      print "[INFO] #{c.count} #{c.to_s.pluralize}\n"
     end
 
+    print "[INFO] creating new bookings"
     begin
       fetch_timetables.each do |booking|
         tmp = booking.xpath('room').text
@@ -41,7 +42,7 @@ namespace :data do
           b = Booking.find( :first, conditions: conditions )
           if b.nil?
             b = Booking.create( conditions )
-            p "[INFO] new booking created"
+            print '.'
           end
           c.xpath('teacher').each do |t|
             tmp = t.text
@@ -51,10 +52,10 @@ namespace :data do
         end
       end
       [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
-        p "[INFO] #{c.count} #{c.to_s.pluralize}"
+        print "\n[INFO] #{c.count} #{c.to_s.pluralize}"
       end
     rescue => e
-      p "[ERROR] main: #{e.message}"
+      print "\n[ERROR] main: #{e.message}"
       p e.backtrace
     end
   end

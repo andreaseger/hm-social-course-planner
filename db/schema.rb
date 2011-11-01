@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111031135022) do
+ActiveRecord::Schema.define(:version => 20111031205230) do
+
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bookings", :force => true do |t|
     t.integer  "course_id"
@@ -45,7 +53,6 @@ ActiveRecord::Schema.define(:version => 20111031135022) do
   create_table "days", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.integer  "number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -59,6 +66,16 @@ ActiveRecord::Schema.define(:version => 20111031135022) do
   end
 
   add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true
+
+  create_table "identities", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "identities", ["email"], :name => "index_identities_on_email", :unique => true
 
   create_table "lectureships", :force => true do |t|
     t.integer "booking_id"
@@ -104,5 +121,12 @@ ActiveRecord::Schema.define(:version => 20111031135022) do
   end
 
   add_index "timeslots", ["start_label", "end_label", "day_id"], :name => "index_timeslots_on_start_label_and_end_label_and_day_id", :unique => true
+
+  create_table "users", :force => true do |t|
+    t.string   "name"
+    t.string   "infos"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

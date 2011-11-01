@@ -1,4 +1,11 @@
 SocialCoursePlanner::Application.routes.draw do
+  resources :users
+  resources :sessions
+  resources :authentications
+  match '/auth/:provider/callback' => 'sessions#create'
+  match "/logout" => "sessions#destroy", :as => :logout
+  match "/login" => "authentications#index", :as => :login
+
   resources :schedules
   resources :groups
 
