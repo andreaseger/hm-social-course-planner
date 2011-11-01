@@ -1,7 +1,7 @@
 #Social Course Planner
 
 a web app to manage, share, compare,...  your current course plan with your classmates.
-Uses the open data from the [Univerity of Applied Science Faculty 07](fi.cs.hm.edu) to get information about courses, booking, teachers and rooms.
+Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.cs.hm.edu) to get information about courses, booking, teachers and rooms.
 
 
 ##Requirements
