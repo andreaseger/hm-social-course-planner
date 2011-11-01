@@ -27,6 +27,21 @@ FactoryGirl.define do
     sequence(:name) { |n| "foo#{n}" }
     label "Lorem Ipsum"
   end
+
+  factory :user do
+    name "foobar"
+    email "foo@bar.com"
+    profile
+  end
+
+  factory :profile do
+    firstname "Foo"
+    lastname "Bar"
+    website "http://twitter.com/sch1zo"
+    twitter "sch1zo"
+    bio "Lorem Ipsum"
+  end
+
   #factory :booking do
   #  course
   #  room

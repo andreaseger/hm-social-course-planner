@@ -1,4 +1,6 @@
 SocialCoursePlanner::Application.routes.draw do
+  resources :profiles
+
   resource :user
   #resources :users do
   #  get ':username', action: :show, on: :collection

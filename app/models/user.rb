@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
-  acts_as_authentic
   has_many :authentications, dependent: :destroy
   has_one :schedule
+  has_one :profile
 
   named_scope :with_role, lambda { |role| {:conditions => "roles_mask & #{2**ROLES.index(role.to_s)} > 0 "} }
 
@@ -20,6 +20,6 @@ class User < ActiveRecord::Base
   end
 
   def self.create_from_hash!(hash)
-    create( name: hash['info']['name'], email: hash['info']['email'] )
+    create( username: hash['info']['name'], email: hash['info']['email'] )
   end
 end
