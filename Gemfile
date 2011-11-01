@@ -23,11 +23,15 @@ gem 'jquery-rails'
 gem 'haml-rails'
 gem 'modernizr-rails'
 
+#Authentication
 gem 'omniauth-identity', :git => 'git://github.com/intridea/omniauth-identity.git'
 gem 'omniauth-github', :git => 'git://github.com/intridea/omniauth-github.git'
 gem 'omniauth-openid', :git => 'git://github.com/intridea/omniauth-openid.git'
 #gem 'omniauth-twitter'
 #gem 'omniauth-facebook'
+
+#Authorization
+gem 'cancan'
 
 group :development do
   gem "capistrano"

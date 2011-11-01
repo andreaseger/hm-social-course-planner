@@ -7,6 +7,7 @@ Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.
 ##Requirements
 
 - Ruby > 1.9.2 (app is using the new hash syntax)
+- Bundler
 - a Github API Key ( [get one here](https://github.com/account/applications/new) )
 
 ##Setup
@@ -15,11 +16,7 @@ Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.
     cd hm-social-course-planner
     bundle install
 
-    be rake db:create
-    be rake db:migrate
-
-    be rake db:seed
-    be rake data:update
+    be rake setup
 
     # setup your github key
     export GITHUB_KEY='GITHUB_CLIENT_ID'
