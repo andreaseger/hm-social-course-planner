@@ -9,8 +9,9 @@ class Booking < ActiveRecord::Base
   belongs_to :timeslot
   belongs_to :group
 
-  validates :course, presence: true
   validates :room, presence: true
+  validates :course, presence: true
   validates :timeslot, presence: true
   validates :group, presence: true
+  validates :teachers, presence: true
 end

@@ -16,8 +16,12 @@
   %p
     %strong Sign in through one of these services:
 
--%w(identity open_id github developer).each do |provider|
+-%w(identity open_id github).each do |provider|
   = link_to "/auth/#{provider}", {:class => 'auth_provider'} do
     = image_tag "authbuttons/#{provider}_64.png", :size => "64x64", :alt => "#{provider == 'open_id' ? 'OpenID' : provider.titleize}"
     = provider == 'open_id' ? 'OpenID' : provider.titleize
+- unless Rails.env == :production
+  = link_to "/auth/developer", {:class => 'auth_provider'} do
+    = image_tag "authbuttons/developer_64.png", :size => "64x64", :alt => "Developer"
+    Developer
 .clear

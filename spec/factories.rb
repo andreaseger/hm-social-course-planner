@@ -1,20 +1,19 @@
 FactoryGirl.define do
-  factory :course do
-    sequence(:name) { |n| "foo#{n}" }
-    label "Lorem Ipsum"
+  sequence :name do |n|
+    "foo#{n}"
   end
-  factory :teacher do
-    sequence(:name) { |n| "foo#{n}" }
+  factory :course do
+    name
     label "Lorem Ipsum"
   end
   factory :room do
-    sequence(:name) { |n| "foo#{n}" }
+    name
     label "Lorem Ipsum"
     building "r"
     floor 2
   end
   factory :group do
-    sequence(:name) { |n| "foo#{n}" }
+    name
   end
   factory :timeslot do
     sequence(:start_label) { |n| "10:0#{n}" }
@@ -24,14 +23,13 @@ FactoryGirl.define do
     day
   end
   factory :day do
-    sequence(:name) { |n| "foo#{n}" }
+    name
     label "Lorem Ipsum"
   end
 
-  factory :user do
-    name "foobar"
-    email "foo@bar.com"
-    profile
+  factory :authentication do
+    provider "developer"
+    sequence(:uid) { |n| "foo#{n}" }
   end
 
   factory :profile do
@@ -42,16 +40,31 @@ FactoryGirl.define do
     bio "Lorem Ipsum"
   end
 
-  #factory :booking do
-  #  course
-  #  room
-  #  timeslot
-  #  group
-  #  lectureship
-  #end
-  #factory :lectureship do
-  #  booking
-  #  teacher
-  #end
+  factory :user do
+    sequence(:username) { |n| "foo#{n}" }
+    email { "#{username}@test.com" }
+  end
+  factory :user_with_profile, parent: :user do
+    association :profile, factory: :profile, method: :build
+  end
+  factory :user_with_auth, parent: :user_with_profile do |user|
+    after_create {|user| Factory(:authentication, user: user) }
+  end
+
+  factory :teacher do
+    name
+    label "Lorem Ipsum"
+  end
+
+  factory :booking do
+    course
+    room
+    timeslot
+    group
+  end
+
+  factory :booking_with_teacher, parent: :booking do
+    after_create {|booking| Factory(:teacher, bookings: [booking]) }
+  end
 
 end

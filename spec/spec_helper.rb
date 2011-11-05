@@ -32,6 +32,7 @@ Spork.prefork do
 
   RSpec.configure do |config|
     config.mock_with :mocha
+    config.include(SessionMacros)
 
     config.use_transactional_fixtures = true
 

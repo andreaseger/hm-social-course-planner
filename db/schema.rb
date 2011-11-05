@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111031205230) do
+ActiveRecord::Schema.define(:version => 20111101190743) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20111031205230) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
 
   create_table "bookings", :force => true do |t|
     t.integer  "course_id"
@@ -84,6 +86,19 @@ ActiveRecord::Schema.define(:version => 20111031205230) do
 
   add_index "lectureships", ["booking_id", "teacher_id"], :name => "index_lectureships_on_booking_id_and_teacher_id", :unique => true
 
+  create_table "profiles", :force => true do |t|
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "website"
+    t.string   "twitter"
+    t.text     "bio"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "profiles", ["user_id"], :name => "index_profiles_on_user_id"
+
   create_table "rooms", :force => true do |t|
     t.string   "name"
     t.string   "label"
@@ -100,6 +115,8 @@ ActiveRecord::Schema.define(:version => 20111031205230) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "schedules", ["user_id"], :name => "index_schedules_on_user_id"
 
   create_table "teachers", :force => true do |t|
     t.string   "name"
@@ -123,10 +140,11 @@ ActiveRecord::Schema.define(:version => 20111031205230) do
   add_index "timeslots", ["start_label", "end_label", "day_id"], :name => "index_timeslots_on_start_label_and_end_label_and_day_id", :unique => true
 
   create_table "users", :force => true do |t|
-    t.string   "name"
-    t.string   "infos"
+    t.string   "username"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "roles_mask"
+    t.string   "email"
   end
 
 end
