@@ -3,4 +3,8 @@ class Schedule < ActiveRecord::Base
   belongs_to :user
 
   validates :user, presence: true
+
+  def bookings_without_conflict
+    Booking.find_conflict_free(self.bookings)
+  end
 end

@@ -54,4 +54,9 @@ class Booking < ActiveRecord::Base
     end
     where "timeslot_id IN ( SELECT timeslot_id FROM bookings WHERE bookings.course_id = ? )", booking.course.id
   end
+
+
+  def self.find_conflict_free(bookings)
+    where "timeslot_id NOT IN ( ? )", bookings.map(&:timeslot_id)
+  end
 end

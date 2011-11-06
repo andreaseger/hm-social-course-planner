@@ -48,7 +48,7 @@ FactoryGirl.define do
     association :profile, factory: :profile, method: :build
   end
   factory :user_with_auth, parent: :user_with_profile do |user|
-    after_create {|user| Factory(:authentication, user: user) }
+    after_create {|user| user.authentications << Factory(:authentication, user: user) }
   end
 
   factory :teacher do

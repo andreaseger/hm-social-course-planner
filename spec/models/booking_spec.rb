@@ -100,4 +100,13 @@ describe Booking do
       @booking.find_related_with_conflict.should have(6).things
     end
   end
+  context '#find_conflict_free' do
+    before do
+      @used = FactoryGirl.create_list(:booking_with_teacher, 3)
+      @free = FactoryGirl.create_list(:booking_with_teacher, 3)
+    end
+    it 'should deliver bookings which are not in conflict with any of the given ones' do
+      Booking.find_conflict_free(@used).should == @free
+    end
+  end
 end
