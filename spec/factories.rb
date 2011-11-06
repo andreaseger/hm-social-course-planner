@@ -64,7 +64,14 @@ FactoryGirl.define do
   end
 
   factory :booking_with_teacher, parent: :booking do
-    after_create {|booking| Factory(:teacher, bookings: [booking]) }
+    after_build {|booking| booking.teachers << Factory(:teacher) }
   end
 
+  factory :schedule do
+    user
+  end
+
+  factory :schedule_with_bookings, parent: :schedule do
+    after_build {|schedule| schedule.bookings << Factory(:booking_with_teacher) }
+  end
 end
