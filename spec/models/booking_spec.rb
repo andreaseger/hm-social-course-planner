@@ -18,95 +18,113 @@ describe Booking do
     end
   end
 
-  context '#find_conflicted' do
-    before do
-      t = FactoryGirl.create(:timeslot)
-      b = FactoryGirl.create_list(:booking_with_teacher,5, timeslot: t)
-      @booking = b.first
-      FactoryGirl.create_list(:booking_with_teacher,2)
-    end
-
-    it 'should deliver bookings with the same timeslot' do
-      Booking.find_conflicted(@booking).should have(5).things
-    end
-    it 'should also work directly on an instance' do
-      @booking.find_conflicted.should have(5).things
-    end
-    it 'should have the given instance included' do
-      Booking.find_conflicted(@booking).should include(@booking)
-    end
-
-    it 'should not deliver the given instance if parameter is set to false' do
-      Booking.find_conflicted(@booking, false).should have(4).things
-    end
-    it 'should do the same from an instance' do
-      @booking.find_conflicted(false).should have(4).things
-    end
-    it 'should only deliver the other bookings' do
-      Booking.find_conflicted(@booking, false).should_not include(@booking)
-    end
-
-    it 'should also find conflicted booking with an booking_id' do
-      Booking.find_conflicted(@booking.id).should have(5).things
-    end
-  end
-
-  context '#find_related' do
-    before do
-      c = FactoryGirl.create(:course)
-      b = FactoryGirl.create_list(:booking_with_teacher,5, course: c)
-      @booking = b.first
-      FactoryGirl.create_list(:booking_with_teacher,2)
-    end
-    it 'should deliver bookings with the same course' do
-      Booking.find_related(@booking).should have(5).things
-    end
-    it 'should also work directly on an instance' do
-      @booking.find_related.should have(5).things
-    end
-    it 'should have the given instance included' do
-      Booking.find_related(@booking).should include(@booking)
-    end
-
-    it 'should not deliver the given instance if parameter is set to false' do
-      Booking.find_related(@booking, false).should have(4).things
-    end
-    it 'should do the same from an instance' do
-      @booking.find_related(false).should have(4).things
-    end
-    it 'should only deliver the other bookings' do
-      Booking.find_related(@booking, false).should_not include(@booking)
-    end
-    it 'should also find related booking with an booking_id' do
-      Booking.find_related(@booking.id).should have(5).things
-    end
-  end
-
-  context '#find_related_with_conflict' do
-    before do
-      t = FactoryGirl.create(:timeslot)
-      b = FactoryGirl.create_list(:booking_with_teacher, 3, timeslot: t)
-      b.each do |e|
-        c = e.course
-        FactoryGirl.create_list(:booking_with_teacher, 3, course: c)
+  context '#scopes' do
+    context '#in_conflict_with' do
+      before do
+        @booking = FactoryGirl.create(:booking_with_teacher)
+        FactoryGirl.create(:booking_with_teacher, timeslot: @booking.timeslot)
+        FactoryGirl.create(:booking_with_teacher)
       end
-      @booking = b.first
-      FactoryGirl.create_list(:booking_with_teacher,2)
+
+      it 'should deliver bookings with the same timeslot' do
+        Booking.in_conflict_with(@booking,true).should have(2).things
+      end
+      it 'should be availabe through an instance' do
+        @booking.find_conflicted(true).should have(2).things
+      end
+      it 'should have the given instance included' do
+        Booking.in_conflict_with(@booking,true).should include @booking
+      end
+
+      it 'should not deliver the given instance if parameter is set to false' do
+        Booking.in_conflict_with(@booking).should have(1).things
+      end
+      it 'should do the same from an instance' do
+        @booking.find_conflicted.should have(1).things
+      end
+      it 'should only deliver the other bookings' do
+        Booking.in_conflict_with(@booking).should_not include(@booking)
+      end
+
+      it 'should also find conflicted booking with an booking_id' do
+        Booking.in_conflict_with(@booking.id).should have(1).things
+      end
     end
-    it 'should find booking which are in conflict with itself or any of the related bookings' do
-      Booking.find_related_with_conflict(@booking).should have(6).things
+
+    context '#related_to' do
+      before do
+        @booking = FactoryGirl.create(:booking_with_teacher)
+        FactoryGirl.create(:booking_with_teacher, course: @booking.course)
+        FactoryGirl.create(:booking_with_teacher)
+      end
+      it 'should deliver bookings with the same course' do
+        Booking.related_to(@booking,true).should have(2).things
+      end
+      it 'should be availabe through an instance' do
+        @booking.find_related(true).should have(2).things
+      end
+      it 'should have the given instance included' do
+        Booking.related_to(@booking,true).should include(@booking)
+      end
+
+      it 'should not deliver the given instance if parameter is set to false' do
+        Booking.related_to(@booking).should have(1).things
+      end
+      it 'should only deliver the other bookings' do
+        Booking.related_to(@booking).should_not include(@booking)
+      end
+      it 'should also find related booking with an booking_id' do
+        Booking.related_to(@booking.id).should have(1).things
+      end
     end
-    it 'should also work directly on an instance' do
-      @booking.find_related_with_conflict.should have(6).things
+
+    context '#in_conflict_with_any_related' do
+      before do
+        @booking = FactoryGirl.create(:booking_with_teacher)
+        @b2 = FactoryGirl.create(:booking_with_teacher, timeslot: @booking.timeslot)
+        @b3 = FactoryGirl.create(:booking_with_teacher, course: @booking.course)
+        @b4 = FactoryGirl.create(:booking_with_teacher, timeslot: @b3.timeslot)
+        FactoryGirl.create(:booking_with_teacher)
+      end
+      it 'should deliver bookings with the same timeslot as the given one' do
+        Booking.in_conflict_with_any_related(@booking).should include @b2
+      end
+      it 'should deliver bookings with the same timeslot as one of the related ones' do
+        Booking.in_conflict_with_any_related(@booking).should include @b4
+      end
+      it 'should not deliver the given booking' do
+        Booking.in_conflict_with_any_related(@booking).should_not include @booking
+      end
+      it 'should not deliver related bookings' do
+        Booking.in_conflict_with_any_related(@booking).should_not include @b3
+      end
+
+    end
+    context '#without_conflict' do
+      before do
+        @used = FactoryGirl.create_list(:booking_with_teacher, 2)
+        @free = FactoryGirl.create_list(:booking_with_teacher, 2)
+      end
+      it 'should deliver bookings which are not in conflict with any of the given ones' do
+        Booking.without_conflict(@used).should == @free
+      end
     end
   end
-  context '#find_conflict_free' do
+  context '#accessing scopes from instance' do
     before do
-      @used = FactoryGirl.create_list(:booking_with_teacher, 3)
-      @free = FactoryGirl.create_list(:booking_with_teacher, 3)
+      @booking = FactoryGirl.create(:booking_with_teacher)
     end
-    it 'should deliver bookings which are not in conflict with any of the given ones' do
-      Booking.find_conflict_free(@used).should == @free
+    it 'should call "related_to" when called "find_related"' do
+      Booking.expects(:related_to).with(@booking,false)
+      @booking.find_related
+    end
+    it 'should call "in_conflict_with" when called "find_conflicted"' do
+      Booking.expects(:in_conflict_with).with(@booking,false)
+      @booking.find_conflicted
+    end
+    it 'should call "in_conflict_with_any_related" when called "find_related_with_conflict"' do
+      Booking.expects(:in_conflict_with_any_related).with(@booking)
+      @booking.find_related_with_conflict
     end
   end
 end

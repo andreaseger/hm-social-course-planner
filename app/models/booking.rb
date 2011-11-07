@@ -15,11 +15,7 @@ class Booking < ActiveRecord::Base
   validates :group, presence: true
   validates :teachers, presence: true
 
-  def find_conflicted(deliver_current = true)
-    Booking.find_conflicted(self,deliver_current)
-  end
-
-  def self.find_conflicted(booking, deliver_current = true)
+  scope :in_conflict_with, -> booking, deliver_current = false {
     unless booking.respond_to? :timeslot
       booking = find(booking)
     end
@@ -28,13 +24,8 @@ class Booking < ActiveRecord::Base
     else
       where "timeslot_id = ? AND id != ?", booking.timeslot.id, booking.id
     end
-  end
-
-  def find_related(deliver_current = true)
-    Booking.find_related(self,deliver_current)
-  end
-
-  def self.find_related(booking, deliver_current = true)
+  }
+  scope :related_to, -> booking, deliver_current = false {
     unless booking.respond_to? :course
       booking = find(booking)
     end
@@ -43,20 +34,27 @@ class Booking < ActiveRecord::Base
     else
       where "course_id = ? AND id != ?", booking.course.id, booking.id
     end
-  end
-
-  def find_related_with_conflict
-    Booking.find_related_with_conflict(self)
-  end
-  def self.find_related_with_conflict(booking)
+  }
+  scope :in_conflict_with_any_related, -> booking {
     unless booking.respond_to? :course
       booking = find(booking)
     end
-    where "timeslot_id IN ( SELECT timeslot_id FROM bookings WHERE bookings.course_id = ? )", booking.course.id
-  end
-
-
-  def self.find_conflict_free(bookings)
+    #where "timeslot_id IN ( SELECT timeslot_id FROM bookings WHERE bookings.course_id = ? )", booking.course.id
+    #TODO - not really happy with this solution, find a way without a second select
+    a = related_to(booking,true)
+    where "timeslot_id IN ( ? ) AND id NOT IN ( ? )", a.map(&:timeslot_id), a.map(&:id)
+  }
+  scope :without_conflict, -> bookings {
     where "timeslot_id NOT IN ( ? )", bookings.map(&:timeslot_id)
+  }
+
+  def find_conflicted(deliver_current = false)
+    Booking.in_conflict_with(self,deliver_current)
+  end
+  def find_related(deliver_current = false)
+    Booking.related_to(self,deliver_current)
+  end
+  def find_related_with_conflict
+    Booking.in_conflict_with_any_related(self)
   end
 end
