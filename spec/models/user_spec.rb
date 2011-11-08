@@ -55,11 +55,11 @@ describe User do
       @user.should have(1).classmate
       @mate.should have(1).classmate
     end
-    it 'should set the relationship as not accepted when only one user adds the other' do
+    it 'should set the relationship as accepted for the user who initiate the relationship' do
       @user.add_classmate @mate
-      @user.relationships.last.accepted?.should be_false
+      @user.relationships.last.accepted?.should be_true
     end
-    it 'should show the relationship as not accepted another user adds you' do
+    it 'should set the relationship as not accepted if another user adds you' do
       @user.add_classmate @mate
       @mate.relationships.last.accepted?.should be_false
     end

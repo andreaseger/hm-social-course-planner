@@ -35,12 +35,12 @@ class User < ActiveRecord::Base
 
   def add_classmate(mate)
     return if mate == self
-    if mate.classmates.include?(self)
-      self.classmates << mate unless self.classmates.include?(mate)
+    if classmates.include?(mate)
       Relationship.accept(self,mate)
     else
       self.classmates << mate unless self.classmates.include?(mate)
       mate.classmates << self unless mate.classmates.include?(self)
+      Relationship.accept(self,mate)
     end
   end
 end

@@ -6,16 +6,17 @@ class Relationship < ActiveRecord::Base
   validates :classmate, presence: true#, uniquess: {scope: :user}
 
   def self.accept(user, classmate)
-    where(user: [user.id, classmate.id]).each do |relationship|
-      relationship.accept
-    end
+    r = where(user_id: user.id).where(classmate_id: classmate.id).first
+    r.accept! if r
   end
 
-  def accept
+  def accept!
     self.accepted = true
+    self.save
   end
-  def discard
+  def discard!
     self.accepted = false
+    self.save
   end
   def accepted?
     self.accepted
