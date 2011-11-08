@@ -33,7 +33,51 @@ describe User do
   end
 
   context '#classmates' do
-    it 'should be able to set a link between two users'
-    it 'should list all classmates of a user'
+    before do
+      @user = FactoryGirl.create(:user)
+      @mate = FactoryGirl.create(:user)
+    end
+    it 'should do nothing if someone wants to classmate itself' do
+      @user.add_classmate @user
+      @user.classmates.should be_empty
+    end
+    it 'should list all classmates of a user' do
+      @user.add_classmate @mate
+      @user.classmates.should include @mate
+    end
+    it 'should list all classmates of a user when set from the other end' do
+      @mate.add_classmate @user
+      @user.classmates.should include @mate
+    end
+    it 'should not add a relationship multiple times' do
+      @user.add_classmate @mate
+      @mate.add_classmate @user
+      @user.should have(1).classmate
+      @mate.should have(1).classmate
+    end
+    it 'should set the relationship as not accepted when only one user adds the other' do
+      @user.add_classmate @mate
+      @user.relationships.last.accepted?.should be_false
+    end
+    it 'should show the relationship as not accepted another user adds you' do
+      @user.add_classmate @mate
+      @mate.relationships.last.accepted?.should be_false
+    end
+    it 'should set the relationship accepted when both users have added each other' do
+      @user.add_classmate @mate
+      @mate.add_classmate @user
+      @user.relationships.last.accepted?.should be_true
+    end
+    it 'should set the relationship accepted when both users have added each other (the other side)' do
+      @user.add_classmate @mate
+      @mate.add_classmate @user
+      @mate.relationships.last.accepted?.should be_true
+    end
+    context '#pending_classmates' do
+      it 'should only deliver not yet accepted classmates'
+    end
+    context '#accepted_classmates' do
+      it 'should only deliver accepted classmates'
+    end
   end
 end

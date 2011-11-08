@@ -38,4 +38,3 @@ guard 'livereload', :port=>'43523', :apply_js_live => false, :apply_css_live => 
   watch(%r{(app/assets/.+\.js)\.coffee}) { |m| m[1] }
   watch(%r{config/locales/.+\.yml})
 end
-

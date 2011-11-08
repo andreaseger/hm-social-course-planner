@@ -74,4 +74,8 @@ FactoryGirl.define do
   factory :schedule_with_bookings, parent: :schedule do
     after_build {|schedule| schedule.bookings << Factory(:booking_with_teacher) }
   end
+
+  factory :user_with_classmate, parent: :user do
+    after_build {|user| user.classmates << Factory(:user) }
+  end
 end
