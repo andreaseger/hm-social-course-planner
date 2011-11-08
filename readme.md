@@ -11,17 +11,21 @@ Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.
 
 ##Setup
 
-    git clone git://github.com/sch1zo/hm-social-course-planner.git
-    cd hm-social-course-planner
-    bundle install
+discard *bunde exec* if you are using [rvm](http://beginrescueend.com/)
 
-    be rake setup
+```sh
+git clone git://github.com/sch1zo/hm-social-course-planner.git
+cd hm-social-course-planner
+bundle install
 
-    # setup your github key
-    export GITHUB_KEY='GITHUB_CLIENT_ID'
-    export GITHUB_SECRET='GITHUB_SECRET'
+bundle exec rake setup
 
-    be rails s -p4567 thin
+# setup your github key
+export GITHUB_KEY='GITHUB_CLIENT_ID'
+export GITHUB_SECRET='GITHUB_SECRET'
+
+bundle exec rails s -p4567 thin
+```
 
 now go to **lvh.me:4567** and start using the app
 

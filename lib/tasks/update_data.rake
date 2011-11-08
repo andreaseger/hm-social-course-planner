@@ -39,15 +39,24 @@ namespace :data do
                         group_id: group.id,
                         suffix: booking.xpath('suffix').text
                       }
+          teachers = c.xpath('teacher').map do |t|
+            tmp = t.text
+            Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
+          end
           b = Booking.find( :first, conditions: conditions )
           if b.nil?
-            b = Booking.create( conditions )
-            print '.'
-          end
-          c.xpath('teacher').each do |t|
-            tmp = t.text
-            teacher = Teacher.find_by_name(tmp) || Teacher.create(name: tmp, label: get_teacher_name(tmp) )
-            b.teachers << teacher unless b.teachers.include?(teacher)
+            b = Booking.new( conditions )
+            b.teachers << teachers
+            if b.save
+              print '.'
+            else
+              p b.errors
+              exit 1
+            end
+          else
+            teachers.each do |teacher|
+              b.teachers << teacher unless b.teachers.include?(teacher)
+            end
           end
         end
       end
@@ -68,44 +77,39 @@ namespace :data do
     #[Booking, Room, Timeslot, Course, Teacher].each {|m| m.delete_if{|e| e.orphan} }
   end
 
-  def fetch_timetables
-    xml = nil
-    Timeout::timeout(5) do
-      net = Net::HTTP.get_response(URI.parse('http://fi.cs.hm.edu/fi/rest/public/timetable/group.xml'))
+  def get(url)
+    Timeout::timeout(10) do
+      net = Net::HTTP.get_response(URI.parse(url))
       raise "HTTP Error: #{net.code}" if %w(404 500).include? net.code
       xml = Nokogiri::XML(net.body)
     end
+  end
+  def fetch_timetables
+    xml = get 'http://fi.cs.hm.edu/fi/rest/public/timetable/group.xml'
     return xml.xpath('/list/timetable/day/time/booking')
   rescue => e
     p "[ERROR] fetch_timetables: #{e.message}"
     p e.backtrace
+    exit 1
   end
 
   def get_modul_label(modul)
-    xml = ''
-    Timeout::timeout(5) do
-      net = Net::HTTP.get_response(URI.parse("http://fi.cs.hm.edu/fi/rest/public/modul/title/#{modul}.xml"))
-      raise "HTTP Error: #{net.code}" if %w(404 500).include? net.code
-      xml = Nokogiri::XML(net.body)
-    end
+    xml = get "http://fi.cs.hm.edu/fi/rest/public/modul/title/#{modul}.xml"
     xml.xpath('/modul/name').first.text
   rescue => e
     p "[ERROR] get_modul_label: #{e.message}"
     p e.backtrace
+    exit 1
   end
 
   def get_teacher_name(teacher)
-    xml = ''
-    Timeout::timeout(5) do
-      net = Net::HTTP.get_response(URI.parse("http://fi.cs.hm.edu/fi/rest/public/person/name/#{teacher}.xml"))
-      raise "HTTP Error: #{net.code}" if %w(404 500).include? net.code
-      xml = Nokogiri::XML(net.body)
-    end
+    xml = get "http://fi.cs.hm.edu/fi/rest/public/person/name/#{teacher}.xml"
     person = xml.xpath('/person').first
 
     "#{person.xpath('title').text} #{person.xpath('firstname').text} #{person.xpath('lastname').text}"
   rescue => e
     p "[ERROR] get_teacher_name: #{e.message}"
     p e.backtrace
+    exit 1
   end
 end

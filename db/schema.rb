@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20111107235055) do
   create_table "days", :force => true do |t|
     t.string   "name"
     t.string   "label"
+    t.integer  "number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
