@@ -16,28 +16,29 @@ body
     +container
     +susy-grid-background
 
-#title
-  +alpha
-  +columns(4)
-  +prefix(1)
+    #title
+      +alpha
+      +columns(4)
+      +prefix(1)
 
-nav
-  +omega
-  li
-    float: left
-    list-style-type: none
-    margin-left: 1em
+    nav
+      +omega
+      +columns(7)
+      +horizontal-list
+      li
+        float: right
+        margin-left: 1em
 
-#main
-  +full
+    #main
+      +full
 
-#left
-  +alpha
-  +columns(1)
+    #left
+      +alpha
+      +columns(1)
 
-#content
-  +full
-  +prefix(1)
+    #content
+      +columns(11)
+      +omega
 
 div
   &.field, &.actions
