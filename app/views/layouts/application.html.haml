@@ -12,8 +12,8 @@
     More info: h5bp.com/b/378
   %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}
   %title
-  %meta{:content => "", :name => "description"}
-  %meta{:content => "", :name => "author"}
+  %meta{:content => "Web-based time schedule application.", :name => "description"}
+  %meta{:content => "Andreas Eger; Moritz Kammerer", :name => "author"}
   / Mobile viewport optimized: j.mp/bplateviewport
   %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}
 
@@ -23,10 +23,11 @@
   = csrf_meta_tags
 %body
   .container
-    #nav
+    #header
+      %h1#title
+        %a{:href=> "/"} Social course planner
+      
       %nav
-        %li
-          = link_to 'Groups', groups_url
         -if signed_in?
           %li
             = link_to 'Linked Accounts', authentications_url
@@ -39,8 +40,10 @@
     -if notice
       %p#notice= notice
     %div{:role => "main", :id => "main"}
-      = session
-      = yield
+      #left
+        TODO
+      #content
+        = yield
     %footer#footer
   = javascript_include_tag "application"
   = yield :javascript
