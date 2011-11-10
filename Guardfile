@@ -30,11 +30,22 @@ guard 'rspec', :version => 2, :cli =>"--colour --format d --drb" do
 end
 
 
-guard 'livereload', :port=>'43523', :apply_js_live => false, :apply_css_live => false do
+#guard 'livereload', :port=>'43523', :apply_js_live => false, :apply_css_live => false do
+guard 'livereload', :port=>'43523' do
   watch(%r{app/.+\.(erb|haml)})
   watch(%r{app/helpers/.+\.rb})
   watch(%r{(public/|app/assets).+\.(css|js|html)})
-  watch(%r{(app/assets/.+\.css)\.s[ac]ss}) { |m| m[1] }
-  watch(%r{(app/assets/.+\.js)\.coffee}) { |m| m[1] }
+
+  #watch(%r{(app/assets/.+\.css)\.s[ac]ss}) { |m| "assets/#{m[1]}" }
+  #watch(%r{(app/assets/.+\.js)\.coffee}) { |m| "assets/#{m[1]}" }
+  watch(%r{app/assets/stylesheets/(.+\.css).*$}) do |m|
+    %x{ curl -sk http://localhost:4567/assets/#{m[1]} > /dev/null }
+    "assets/#{m[1]}"
+  end
+  watch(%r{app/assets/javascripts/(.+\.js).*$}) do |m|
+    %x{ curl -sk http://localhost:4567/assets/#{m[1]} > /dev/null }
+    "assets/#{m[1]}"
+  end
+
   watch(%r{config/locales/.+\.yml})
 end
