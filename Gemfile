@@ -33,6 +33,9 @@ gem 'omniauth-openid', :git => 'git://github.com/intridea/omniauth-openid.git'
 #Authorization
 gem 'cancan'
 
+group :production, :test do
+  gem 'pg'
+end
 group :development do
   gem "capistrano"
   gem 'thin'
