@@ -45,39 +45,78 @@ describe User do
       @user.add_classmate @mate
       @user.classmates.should include @mate
     end
-    it 'should list all classmates of a user when set from the other end' do
-      @mate.add_classmate @user
-      @user.classmates.should include @mate
-    end
     it 'should not add a relationship multiple times' do
       @user.add_classmate @mate
       @mate.add_classmate @user
       @user.should have(1).classmate
       @mate.should have(1).classmate
     end
-    it 'should set the relationship as accepted for the user who initiate the relationship' do
-      @user.add_classmate @mate
-      @user.relationships.last.accepted?.should be_true
+    context '#is_classmate_with' do
+      it 'should be true if both have added the other' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @user.is_classmate_with(@mate).should be_true
+      end
+      it 'should be true if both have added the other (other side)' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @mate.is_classmate_with(@user).should be_true
+      end
+      it "should be false if you have the user approved but the user didn't approve you back" do
+        @user.add_classmate @mate
+        @user.is_classmate_with(@mate).should be_false
+      end
+      it "should be false if a user added you but you didn't approve him" do
+        @user.add_classmate @mate
+        @mate.is_classmate_with(@user).should be_false
+      end
     end
-    it 'should set the relationship as not accepted if another user adds you' do
-      @user.add_classmate @mate
-      @mate.relationships.last.accepted?.should be_false
-    end
-    it 'should set the relationship accepted when both users have added each other' do
-      @user.add_classmate @mate
-      @mate.add_classmate @user
-      @user.relationships.last.accepted?.should be_true
-    end
-    it 'should set the relationship accepted when both users have added each other (the other side)' do
-      @user.add_classmate @mate
-      @mate.add_classmate @user
-      @mate.relationships.last.accepted?.should be_true
+    context '#classmate_requests' do
+      it 'should not deliver a classmate_request from mate for the user' do
+        @user.add_classmate @mate
+        @user.classmate_requests.should_not include @mate
+      end
+      it 'should deliver a classmate_request of the user for the mate' do
+        @user.add_classmate @mate
+        @mate.classmate_requests.should include @user
+      end
+      it 'should not deliver a classmate_request if the request got accepted' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @mate.classmate_requests.should_not include @user
+      end
+
     end
     context '#pending_classmates' do
-      it 'should only deliver not yet accepted classmates'
+      it 'should add the mate to the pending_classmates list of the user' do
+        @user.add_classmate @mate
+        @user.pending_classmates.should include @mate
+      end
+      it 'should not add the user to the pending_classmate list of the mate' do
+        @user.add_classmate @mate
+        @mate.pending_classmates.should_not include @user
+      end
+      it 'should not deliver a user if the relationship is accepted' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @user.pending_classmates.should_not include @user
+      end
     end
     context '#accepted_classmates' do
-      it 'should only deliver accepted classmates'
+      it 'should deliver a list of all accepted classmates' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @user.accepted_classmates.should include @mate
+        @mate.accepted_classmates.should include @user
+      end
+      it 'should not deliver a user if the relationship is only initiated from one end' do
+        @user.add_classmate @mate
+        @user.accepted_classmates.should_not include @mate
+      end
+      it 'should not deliver a user if the relationship is only initiated from one end' do
+        @user.add_classmate @mate
+        @mate.accepted_classmates.should_not include @user
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 class Relationship < ActiveRecord::Base
   belongs_to :user
-  belongs_to :classmate, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :classmate, class_name: 'User', foreign_key: 'classmate_id'
 
   validates :user, presence: true
   validates :classmate, presence: true#, uniquess: {scope: :user}

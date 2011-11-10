@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(:version => 20111107235055) do
   create_table "days", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.integer  "number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -103,12 +102,12 @@ ActiveRecord::Schema.define(:version => 20111107235055) do
   create_table "relationships", :force => true do |t|
     t.integer  "user_id"
     t.integer  "classmate_id"
-    t.boolean  "accepted",     :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "relationships", ["classmate_id"], :name => "index_relationships_on_classmate_id"
+  add_index "relationships", ["user_id", "classmate_id"], :name => "index_relationships_on_user_id_and_classmate_id", :unique => true
   add_index "relationships", ["user_id"], :name => "index_relationships_on_user_id"
 
   create_table "rooms", :force => true do |t|

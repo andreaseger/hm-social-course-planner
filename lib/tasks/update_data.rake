@@ -50,6 +50,7 @@ namespace :data do
             if b.save
               print '.'
             else
+              binding.pry
               p b.errors
               exit 1
             end

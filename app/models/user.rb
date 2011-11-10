@@ -33,14 +33,28 @@ class User < ActiveRecord::Base
     create( username: hash['info']['name'], email: hash['info']['email'] )
   end
 
+
+  scope :with_classmate_requests, -> user {
+    joins(:relationships).where("relationships.classmate_id = ?", user.id ).where("relationships.user_id != ?",user.id)
+  }
+  #scope :accepted_classmates, -> user {
+  #  joins(:relationships).where("( relationships.classmate_id != ? AND relationships.user_id = ? ) OR ( relationships.classmate_id = ? AND relationships.user_id != ? )",user.id, user.id, user.id, user.id )
+  #}
+
+  def classmate_requests
+    User.with_classmate_requests(self).reject{|e| e.is_classmate_with(self) }
+  end
+  def pending_classmates
+    self.classmates.reject{|e| e.is_classmate_with(self) }
+  end
+  def accepted_classmates
+    classmates.where("users.id IN (SELECT user_id FROM relationships where classmate_id = ?) ", id)
+  end
   def add_classmate(mate)
     return if mate == self
-    if classmates.include?(mate)
-      Relationship.accept(self,mate)
-    else
-      self.classmates << mate unless self.classmates.include?(mate)
-      mate.classmates << self unless mate.classmates.include?(self)
-      Relationship.accept(self,mate)
-    end
+    self.classmates << mate unless self.classmates.include?(mate)
+  end
+  def is_classmate_with(mate)
+    accepted_classmates.include?(mate)
   end
 end

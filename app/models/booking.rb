@@ -13,7 +13,6 @@ class Booking < ActiveRecord::Base
   validates :course, presence: true
   validates :timeslot, presence: true
   validates :group, presence: true
-  validates :teachers, presence: true
 
   scope :in_conflict_with, -> booking, deliver_current = false {
     unless booking.respond_to? :timeslot
@@ -56,5 +55,11 @@ class Booking < ActiveRecord::Base
   end
   def find_related_with_conflict
     Booking.in_conflict_with_any_related(self)
+  end
+
+  def as_json(options={})
+    options ||= { methods: [:teachers, :room, :course, :timeslot, :group ],
+                  except: [:created_at, :updated_at] }
+    super(options)
   end
 end
