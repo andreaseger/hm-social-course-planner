@@ -1,0 +1,4 @@
+test:
+  adapter: postgresql
+  database: course_planner_test
+  username: postgres

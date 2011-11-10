@@ -1,5 +1,7 @@
 #Social Course Planner
 
+[![Build Status](https://secure.travis-ci.org/sch1zo/hm-social-course-planner.png)](http://travis-ci.org/sch1zo/hm-social-course-planner)
+
 a web app to manage, share, compare,...  your current course plan with your classmates.
 Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.cs.hm.edu) to get information about courses, booking, teachers and rooms.
 
@@ -42,4 +44,5 @@ now go to **lvh.me:4567** and start using the app
 
 ##Meta
 
+- [@rootbuerger](http://twitter.com/rootbuerger)
 - [@sch1zo](http://twitter.com/sch1zo)

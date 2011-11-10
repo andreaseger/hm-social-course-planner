@@ -1,10 +1,9 @@
-  rvm:
-    - ree
-    - 1.9.2
-    - 1.9.3
-  before_script:
-    - "mv config/database.example config/database.yml"
-    - "bundle exec rake db:migrate"
-  notifications:
-    email:
-      - dev@eger.lc
+rvm:
+  - 1.9.3
+before_script:
+  - "mv config/database.travis config/database.yml"
+  - "psql -c 'create database course_planner_test;' -U postgres"
+  - "bundle exec rake db:migrate"
+notifications:
+  email:
+    - dev@eger.lc
