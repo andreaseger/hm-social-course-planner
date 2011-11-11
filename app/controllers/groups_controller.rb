@@ -17,9 +17,6 @@ class GroupsController < ApplicationController
         render json: @group,
           include: {bookings: {methods: [:teachers, :room, :course, :timeslot]}},
           except: [:created_at, :updated_at]
-          #include: {
-          #  bookings: { include: [:teachers, :room, :course, :timeslot] }
-          #}
       }
     end
   end

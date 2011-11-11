@@ -11,7 +11,7 @@ class Timeslot < ActiveRecord::Base
   validates :end_time, presence: true
   validates :day, presence: true
 
-  def as_json(options={})
+  def as_json(options=nil)
     options ||= { methods: :day, except: [:created_at, :updated_at] }
     super(options)
   end

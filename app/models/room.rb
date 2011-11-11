@@ -9,7 +9,7 @@ class Room < ActiveRecord::Base
   validates :building, presence: true
   validates :floor, presence: true
 
-  def as_json(options={})
+  def as_json(options=nil)
     options ||= { only: [:id, :label, :name] }
     super(options)
   end

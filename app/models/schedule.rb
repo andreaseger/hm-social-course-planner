@@ -11,4 +11,9 @@ class Schedule < ActiveRecord::Base
     new_bookings = bookings.map{ |e| Booking.related_to(e) }.flatten
     self.bookings << new_bookings.reject{|e| self.bookings.include? e }
   end
+
+  def as_json(options={})
+    options ||= { methods: :bookings, except: [:created_at, :updated_at] }
+    super(options)
+  end
 end

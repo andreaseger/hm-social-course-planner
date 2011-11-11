@@ -4,7 +4,7 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def as_json(options={})
+  def as_json(options=nil)
     options ||= { except: [:created_at, :updated_at] }
     super(options)
   end

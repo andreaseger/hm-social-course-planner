@@ -1,5 +1,3 @@
-%p#notice= notice
-
 %p
   %b Firstname:
   = @profile.firstname
@@ -9,16 +7,14 @@
 %p
   %b Website:
   = @profile.website
+
 %p
   %b Twitter:
   = @profile.twitter
 %p
   %b Bio:
   = @profile.bio
-%p
-  %b User:
-  = @profile.user
 
-= link_to 'Edit', edit_profile_path(@profile)
+= link_to 'Edit', edit_user_profile_path
 \|
-= link_to 'Back', profiles_path
+= link_to 'Back', user_path

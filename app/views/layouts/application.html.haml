@@ -37,6 +37,8 @@
           %li
             = link_to 'LogIn', login_url
 
+    -if error
+      %p#error= error
     -if notice
       %p#notice= notice
     %div{:role => "main", :id => "main"}

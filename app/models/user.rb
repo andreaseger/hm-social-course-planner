@@ -3,11 +3,19 @@ class User < ActiveRecord::Base
   has_many :relationships, dependent: :destroy
   has_many :classmates, through: :relationships
 
-  has_one :schedule
+  has_one :schedule, dependent: :destroy
   has_one :profile, dependent: :destroy
+  before_create :build_default_profile_and_schedule
 
   validates :username, presence: true
   validates :email, presence: true
+
+  scope :with_classmate_requests, -> user {
+    joins(:relationships).where("relationships.classmate_id = ?", user.id ).where("relationships.user_id != ?",user.id)
+  }
+  scope :accepted_classmates, -> user {
+    user.accepted_classmates
+  }
 
   scope :with_role, -> role {
     where "roles_mask & #{2**ROLES.index(role.to_s)} > 0 "
@@ -34,13 +42,6 @@ class User < ActiveRecord::Base
   end
 
 
-  scope :with_classmate_requests, -> user {
-    joins(:relationships).where("relationships.classmate_id = ?", user.id ).where("relationships.user_id != ?",user.id)
-  }
-  #scope :accepted_classmates, -> user {
-  #  joins(:relationships).where("( relationships.classmate_id != ? AND relationships.user_id = ? ) OR ( relationships.classmate_id = ? AND relationships.user_id != ? )",user.id, user.id, user.id, user.id )
-  #}
-
   def classmate_requests
     User.with_classmate_requests(self).reject{|e| e.is_classmate_with(self) }
   end
@@ -56,5 +57,11 @@ class User < ActiveRecord::Base
   end
   def is_classmate_with(mate)
     accepted_classmates.include?(mate)
+  end
+
+private
+  def build_default_profile_and_schedule
+    self.build_profile
+    self.build_schedule
   end
 end

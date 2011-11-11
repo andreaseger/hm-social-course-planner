@@ -1,10 +1,13 @@
 SocialCoursePlanner::Application.routes.draw do
-  resources :profiles
-
-  resource :user
-  #resources :users do
-  #  get ':username', action: :show, on: :collection
-  #end
+  resources :relationships
+  resource :user do
+    resource :schedule
+    resource :profile
+  end
+  resources :users do
+    resource :schedule
+    resource :profile
+  end
 
   resources :sessions
   resources :authentications
@@ -12,7 +15,6 @@ SocialCoursePlanner::Application.routes.draw do
   match "/logout" => "sessions#destroy", :as => :logout
   match "/login" => "authentications#index", :as => :login
 
-  resources :schedules
   resources :groups
 
   root :to => 'groups#index'

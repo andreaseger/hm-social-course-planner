@@ -7,7 +7,7 @@ class Course < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :label, presence: true
 
-  def as_json(options={})
+  def as_json(options=nil)
     options ||= { except: [:created_at, :updated_at] }
     super(options)
   end
