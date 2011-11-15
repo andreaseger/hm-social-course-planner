@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
   def update
     respond_to do |format|
       if @profile.update_attributes(params[:profile])
-        format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
+        format.html { redirect_to user_path, notice: 'Profile was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -29,11 +29,12 @@ class ProfilesController < ApplicationController
 
 private
   def load_and_authorize
-    if current_user.role?(:admin) && params[:user_id]
-      @profile = Profile.find(params[:user_id])
+    #binding.pry
+    if params['user_id'] && ( current_user.role?(:admin) || can?(params[:action].to_sym, User.find(params['user_id']).profile) )
+      @profile = User.find(params['user_id']).profile
     else
       @profile = current_user.profile
     end
-    authorize! params[:action], @profile
+    authorize! params[:action].to_sym, @profile
   end
 end

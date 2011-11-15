@@ -8,6 +8,10 @@ class Ability
     else
       can :read, Group
 
+      can :manage, User do |u|
+        u == user
+      end
+
       can :manage, Profile do |profile|
         profile.try(:user) == user
       end
@@ -15,10 +19,10 @@ class Ability
         schedule.try(:user) == user
       end
 
-      can :read, Schedule do |schedule|
+      can [:show,:read], Schedule do |schedule|
         schedule.try(:user).is_classmate_with user
       end
-      can :read, Profile do |profile|
+      can [:show,:read], Profile do |profile|
         profile.try(:user).is_classmate_with user
       end
     end

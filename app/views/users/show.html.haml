@@ -5,6 +5,17 @@
   %strong Email:
   = @user.email
 
+%p
+  = @user.id
+
+#classmates
+  %strong
+    Classmates:
+  %ul
+    - @user.accepted_classmates.each do |mate|
+      %li.classmate= link_to mate.profile.fullname, {controller: 'profiles', action: 'show', user_id: mate.id }
+  = link_to "Add Classmate", new_relationship_url
+
 = link_to 'Schedule', user_schedule_path
 \|
 = link_to 'Profile', user_profile_path

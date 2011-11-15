@@ -16,6 +16,10 @@ class RelationshipsController < ApplicationController
     end
   end
 
+  def new
+    @relationship = Relationship.new(user: current_user)
+  end
+
   def create
     @relationship = Relationship.new(params[:relationship])
 

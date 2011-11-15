@@ -15,6 +15,7 @@
   %b Bio:
   = @profile.bio
 
-= link_to 'Edit', edit_user_profile_path
-\|
+- can? :manage, @profile do
+  = link_to 'Edit', edit_user_profile_path
+  \|
 = link_to 'Back', user_path

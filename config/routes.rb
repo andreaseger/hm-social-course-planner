@@ -6,7 +6,7 @@ SocialCoursePlanner::Application.routes.draw do
   end
   resources :users do
     resource :schedule
-    resource :profile
+    resource :profile, :as => :profile
   end
 
   resources :sessions
@@ -14,6 +14,8 @@ SocialCoursePlanner::Application.routes.draw do
   match '/auth/:provider/callback' => 'sessions#create'
   match "/logout" => "sessions#destroy", :as => :logout
   match "/login" => "authentications#index", :as => :login
+
+  get '/auth/failure' => redirect("/login")
 
   resources :groups
 

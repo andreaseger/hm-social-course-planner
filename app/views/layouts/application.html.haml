@@ -30,6 +30,8 @@
       %nav
         -if signed_in?
           %li
+            = link_to 'Account', user_url
+          %li
             = link_to 'Linked Accounts', authentications_url
           %li
             = link_to 'Logout', logout_url
