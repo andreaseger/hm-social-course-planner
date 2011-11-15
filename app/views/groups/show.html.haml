@@ -1,17 +1,13 @@
 %h1
-  = @group.name
+  Gruppe  
+  %strong 
+    = @group.name
 
-%ul#bookings
-  - @group.bookings.each do |booking|
-    %li.booking
-      %span.course
-        %strong= booking.course.label
-      %span.suffix= booking.suffix
-      %span.day= booking.timeslot.day.name
-      %span.time= "#{booking.timeslot.start_label} - #{booking.timeslot.end_label}"
-      - booking.teachers.each do |teacher|
-        %span.teacher=teacher.label
-      %span.room= booking.room.label
+#schedule
 
+- content_for(:javascript) do
+  %script
+    = "renderSchedule(" + @group.id.to_s + ");"
 
-
+- content_for(:stylesheet) do
+  = stylesheet_link_tag "group"

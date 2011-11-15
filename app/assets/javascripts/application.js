@@ -7,3 +7,15 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+$(function() {
+    $.getJSON('/groups.json', null, function(data) {
+        var ul = document.createElement('ul');
+
+        for(var i = 0; i < data.length; i++) {
+            $(ul).append('<li><a href="/groups/' + data[i].id + '">' + data[i].name + '</a></li>');
+        }
+
+        $('#left').append($(ul));
+    });
+});
