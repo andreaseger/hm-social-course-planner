@@ -13,10 +13,36 @@ function renderSchedule(groupId) {
             var booking = data.bookings[b];
             
             var div = $(document.createElement('div'));
+            div.attr('id', 'booking-' + booking.id);
             div.append('<p><strong>' + booking.course.label + '</strong></p>');
             div.append('<p>' + booking.timeslot.start_label + ' - ' + booking.timeslot.end_label);
             
             $('#day' + booking.timeslot.day.id).append(div);
+            
+            $('#booking-' + booking.id).click(function() {
+                var id = parseInt($(this).attr('id').substr(8));
+                
+                var data;
+                
+                if ($(this).is('.selected')) {
+                    data = {
+                        add_bookings: [],
+                        remove_bookings: [ id ]                        
+                    };
+                } else {
+                    data = {
+                        add_bookings: [ id ],
+                        remove_bookings: []                        
+                    };
+                }
+                $.ajax({
+                    url: '/user/schedule.json',
+                    data: data,
+                    type: 'PUT'
+                });
+
+                $(this).toggleClass('selected');                
+            })
         }
     });
 }
