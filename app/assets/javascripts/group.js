@@ -1,4 +1,6 @@
 function renderSchedule(groupId) {
+    $('#schedule').empty();
+    
     $.getJSON('/groups/' + groupId + '.json', null, function(data) {
         createDayDivs();
         $('#day1').append('<h2>Montag</h2>');

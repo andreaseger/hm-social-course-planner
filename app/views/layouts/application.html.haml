@@ -18,6 +18,7 @@
   %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}
 
   = stylesheet_link_tag "application"
+  = stylesheet_link_tag "group"
   = yield :stylesheet
   = javascript_include_tag "modernizr"
   = csrf_meta_tags
@@ -47,6 +48,7 @@
       #left
         
       #content
+        #schedule
         = yield
     %footer#footer
   = javascript_include_tag "application"
