@@ -7,7 +7,7 @@
           %li= msg
 
   .field
-    =# f.label :classmate_name
-    =# f.text_field :classmate_name
+    = f.label :classmate
+    = f.collection_select :classmate_id, @relationship.user.not_classmate_with, :id, :fullname
   .actions
     = f.submit 'Add'

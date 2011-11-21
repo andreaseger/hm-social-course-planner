@@ -41,6 +41,9 @@ class User < ActiveRecord::Base
     create( username: hash['info']['name'], email: hash['info']['email'] )
   end
 
+  def fullname
+    profile.fullname || username
+  end
 
   def classmate_requests
     User.with_classmate_requests(self).reject{|e| e.is_classmate_with(self) }
@@ -57,6 +60,11 @@ class User < ActiveRecord::Base
   end
   def is_classmate_with(mate)
     accepted_classmates.include?(mate)
+  end
+  def not_classmate_with
+    ids = classmates.map(&:id)
+    ids << self.id
+    self.class.where("users.id NOT IN (?)", ids)
   end
 
 private

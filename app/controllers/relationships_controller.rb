@@ -21,15 +21,13 @@ class RelationshipsController < ApplicationController
   end
 
   def create
-    @relationship = Relationship.new(params[:relationship])
-
     respond_to do |format|
-      if @relationship.save
-        format.html { redirect_to @relationship, notice: 'Relationship was successfully created.' }
-        format.json { render json: @relationship, status: :created, location: @relationship }
+      if current_user.add_classmate(User.find(params[:relationship]["classmate_id"]))
+        format.html { redirect_to user_path, notice: 'Relationship was successfully created.' }
+        format.json { render json: Relationship.where(user_id: current_user.id).last, status: :created }
       else
         format.html { render action: "new" }
-        format.json { render json: @relationship.errors, status: :unprocessable_entity }
+        format.json { render json: "some errors", status: :unprocessable_entity }
       end
     end
   end

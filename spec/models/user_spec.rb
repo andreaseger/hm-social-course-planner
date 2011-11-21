@@ -118,5 +118,15 @@ describe User do
         @mate.accepted_classmates.should_not include @user
       end
     end
+    context 'not_classmate_with' do
+      it 'should list users which are not yet your classmate' do
+        @user.not_classmate_with.should include @mate
+      end
+      it 'should not list classmates' do
+        @user.add_classmate @mate
+        @mate.add_classmate @user
+        @user.not_classmate_with.should_not include @mate
+      end
+    end
   end
 end

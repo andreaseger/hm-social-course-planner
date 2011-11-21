@@ -3,6 +3,6 @@ class Profile < ActiveRecord::Base
   validates :user_id, presence: true
 
   def fullname
-    "#{firstname} #{lastname}"
+    "#{firstname} #{lastname}" if firstname || lastname
   end
 end

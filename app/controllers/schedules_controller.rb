@@ -45,7 +45,9 @@ private
     authorize! params[:action], @schedule
   end
   def load_eager_and_authorize
-    if current_user.role?(:admin) && params[:user_id]
+    if current_user.nil?
+      @schedule = Schedule.new
+    elsif current_user.role?(:admin) && params[:user_id]
       @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).find(params[:user_id])
     else
       @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).find(current_user.schedule.id)
