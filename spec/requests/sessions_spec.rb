@@ -12,6 +12,6 @@ describe "SessionHandling" do
   it "should be possible to logout" do
     do_login
     click_link "Logout"
-    current_path.should eq(root_path)
+    current_path.should eq(login_path)
   end
 end
