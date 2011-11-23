@@ -57,6 +57,15 @@ class Booking < ActiveRecord::Base
     Booking.in_conflict_with_any_related(self)
   end
 
+  def selected(schedule=Thread.current[:current_user_schedule])
+    return false unless schedule
+    if self.schedules.include? schedule
+      true
+    else
+      false
+    end
+  end
+
   def as_json(options={})
     options ||= { methods: [:teachers, :room, :course, :timeslot, :group ],
                   except: [:created_at, :updated_at] }
