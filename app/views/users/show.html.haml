@@ -9,7 +9,7 @@
   %strong Id:
   = @user.id
 
-#classmates
+#accepted_classmates
   %strong
     = pluralize(@user.accepted_classmates.count, "Classmate")
   %ul
@@ -18,10 +18,34 @@
         %span.name=mate.fullname
         %span.profile_link= link_to "Profile", user_alt_profile_url(mate)
         %span.schedule_link= link_to "Schedule", user_alt_schedule_url(mate)
-      -#%li.classmate= link_to mate.profile.fullname, {controller: 'profiles', action: 'show', user_id: mate.id }
+        %span.remove_link
+          = link_to "remove", @user.relationships.where(classmate_id: mate.id), :confirm => 'Are you sure you want to remove this classmate?', :method => :delete, :class => "remove"
 
+#pending_classmates
+  %strong
+    Pending
+    = pluralize(@user.pending_classmates.count, "Classmate")
+  %ul
+    - @user.pending_classmates.each do |mate|
+      %li.classmate
+        %span.name=mate.fullname
+        %span.remove_link
+          = link_to "remove", @user.relationships.where(classmate_id: mate.id), :confirm => 'Are you sure you want to remove this classmate?', :method => :delete, :class => "remove"
 
-%ul
-  %li= link_to "Add Classmate", new_relationship_url
-  - if can? :manage, @user
+#classmate_requests
+  %strong
+    Classmate
+    = pluralize(@user.classmate_request.count, "Request")
+  %ul
+    - @user.classmate_requests.each do |mate|
+      %li.classmate
+        %span.name=mate.fullname
+        %span.accept_link
+          = link_to "accept", relationships_path, :params => {:classmate_id => mate.id}, :method => :post, :confirm => 'Are you sure you want to add this classmate', :class => "create"
+
+#add_classmate
+  = link_to "Add Classmate", new_relationship_url
+
+- if can? :manage, @user
+  %ul
     %li= link_to 'Edit', edit_user_path(@user)

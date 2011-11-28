@@ -21,6 +21,7 @@ class RelationshipsController < ApplicationController
   end
 
   def create
+    binding.pry
     respond_to do |format|
       if current_user.add_classmate(User.find(params[:relationship]["classmate_id"]))
         format.html { redirect_to user_path, notice: 'Relationship was successfully created.' }
