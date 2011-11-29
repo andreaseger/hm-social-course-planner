@@ -23,7 +23,8 @@ class SchedulesController < ApplicationController
       params[:schedule] = {}
       params[:schedule][:bookings] = @schedule.bookings
       params[:schedule][:bookings] << Booking.find(params[:add_bookings]) if params[:add_bookings]
-      params[:schedule][:bookings].reject { |e| params[:remove_bookings].include? e.id } if params[:remove_bookings]
+      params[:schedule][:bookings].reject! { |e| params[:remove_bookings].include? e.id.to_s } if params[:remove_bookings]
+      params[:schedule][:bookings] = params[:schedule][:bookings].flatten
     end
     respond_to do |format|
       if @schedule.update_attributes(params[:schedule])

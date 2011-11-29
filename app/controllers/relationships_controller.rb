@@ -21,7 +21,6 @@ class RelationshipsController < ApplicationController
   end
 
   def create
-    binding.pry
     respond_to do |format|
       if current_user.add_classmate(User.find(params[:relationship]["classmate_id"]))
         format.html { redirect_to user_path, notice: 'Relationship was successfully created.' }
@@ -34,11 +33,11 @@ class RelationshipsController < ApplicationController
   end
 
   def destroy
-    @relationship = Relationship.find(params[:id])
-    @relationship.destroy
+    @relationships = Relationship.find_with_inverse(params[:id])
+    @relationships.each {|e| e.destroy }
 
     respond_to do |format|
-      format.html { redirect_to relationships_url }
+      format.html { redirect_to user_path }
       format.json { head :ok }
     end
   end
