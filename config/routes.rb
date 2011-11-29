@@ -1,4 +1,6 @@
 SocialCoursePlanner::Application.routes.draw do
+  get 'rooms' => "rooms#index"
+
   resources :relationships
   resource :user do
     resource :schedule
