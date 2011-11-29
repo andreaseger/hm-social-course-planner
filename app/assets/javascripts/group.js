@@ -13,13 +13,36 @@ function renderSchedule(groupId) {
         for(var b = 0; b < data.bookings.length; b++) {
             var booking = data.bookings[b];
             
+            var timeslotId = "timeslot-" + booking.timeslot.day.id + "-" + booking.timeslot.start_time;
+            
+            var tmp = $("#" + timeslotId);
+            var timeslotList;
+            
+            if (tmp.length) {
+                timeslotList = $(tmp[0]);
+            } else {
+                timeslotList = $(document.createElement("ul"));
+                timeslotList.addClass('timeslot');
+                timeslotList.attr('id', timeslotId);
+                timeslotList.addClass('start-' + booking.timeslot.start_time);
+                timeslotList.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
+                $('#day' + booking.timeslot.day.id).append(timeslotList);                
+            }
+            
             var div = $(document.createElement('div'));
             div.attr('id', 'booking-' + booking.id);
-            div.addClass('start-' + booking.timeslot.start_time);
-            div.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
             div.append('<div class="booking-title"><strong>' + booking.course.label + '</strong></div>');
             div.append('<div class="booking-timeslot">' + booking.timeslot.start_label + ' - ' + booking.timeslot.end_label + '</div>')
-            $('#day' + booking.timeslot.day.id).append(div);
+            div.addClass('booking');
+            div.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
+            
+            if (booking.selected) {
+                div.addClass("booking-selected");
+            }
+            
+            var li = $(document.createElement("li"));
+            li.append(div);
+            timeslotList.append(li);
             
             $('#booking-' + booking.id).click(function() {
                 var id = parseInt($(this).attr('id').substr(8));
@@ -37,10 +60,12 @@ function renderSchedule(groupId) {
                         remove_bookings: []                        
                     };
                 }
+                $('#wait').show();
                 $.ajax({
                     url: '/user/schedule.json',
                     data: data,
-                    type: 'PUT'
+                    type: 'PUT',
+                    complete: function() { $('#wait').hide(); }
                 });
 
                 $(this).toggleClass('selected');                
