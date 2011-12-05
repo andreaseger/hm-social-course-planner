@@ -16,7 +16,7 @@
   %p
     %strong Sign in through one of these services:
 
--%w(identity open_id github).each do |provider|
+-%w(open_id github).each do |provider|
   = link_to "/auth/#{provider}", {:class => 'auth_provider'} do
     = image_tag "authbuttons/#{provider}_64.png", :size => "64x64", :alt => "#{provider == 'open_id' ? 'OpenID' : provider.titleize}"
     = provider == 'open_id' ? 'OpenID' : provider.titleize
@@ -25,3 +25,19 @@
     = image_tag "authbuttons/developer_64.png", :size => "64x64", :alt => "Developer"
     Developer
 .clear
+
+%strong
+  Don't use these services?
+  = link_to "Create an account", new_identity_path
+  or login below.
+= form_tag "/auth/identity/callback" do
+  .field
+    = label_tag :auth_key, "Email"
+    %br
+    = text_field_tag :auth_key
+  .field
+    = label_tag :password
+    %br
+    = password_field_tag :password
+  .actions
+    = submit_tag "Login"

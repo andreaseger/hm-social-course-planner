@@ -13,7 +13,7 @@ class Ability
       end
 
       can :manage, Profile do |profile|
-        profile.try(:user) == user
+        user.profile == profile
       end
       can :manage, Schedule do |schedule|
         schedule.try(:user) == user

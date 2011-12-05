@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
     end
 
     self.current_user = @auth.user
-    redirect_to root_url, :notice => "Signed in!"
+    redirect_to user_profile_url, :notice => "Signed in!"
   end
 
   def destroy
