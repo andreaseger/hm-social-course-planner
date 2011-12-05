@@ -6,7 +6,7 @@ describe "SessionHandling" do
   end
   it "should be possible to login with an existing user" do
     do_login
-    current_path.should eq(root_path)
+    current_path.should eq(user_profile_path)
     page.should have_content("Logout")
   end
   it "should be possible to logout" do
