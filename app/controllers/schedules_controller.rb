@@ -39,21 +39,19 @@ class SchedulesController < ApplicationController
 
 private
   def load_and_authorize
-    if current_user.role?(:admin) && params[:user_id]
-      @schedule = Schedule.find(params[:user_id])
+    if params['user_id']
+      @schedule = User.find(params['user_id']).schedule
     else
       @schedule = current_user.schedule
     end
-    authorize! params[:action], @schedule
+    authorize! params[:action].to_sym, @schedule
   end
   def load_eager_and_authorize
-    if current_user.nil?
-      @schedule = Schedule.new
-    elsif current_user.role?(:admin) && params[:user_id]
-      @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).find(params[:user_id])
+    if params['user_id']
+      @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).where(user_id: params['user_id']).first
     else
-      @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).find(current_user.schedule.id)
+      @schedule = Schedule.includes(bookings: [:teachers, :room, :course, :group, { timeslot: :day }]).where(user_id: current_user.id).first
     end
-    authorize! params[:action], @schedule
+    authorize! params[:action].to_sym, @schedule
   end
 end

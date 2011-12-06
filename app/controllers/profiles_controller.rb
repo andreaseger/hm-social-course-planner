@@ -29,8 +29,7 @@ class ProfilesController < ApplicationController
 
 private
   def load_and_authorize
-    #binding.pry
-    if params['user_id'] && ( current_user.role?(:admin) || can?(params[:action].to_sym, User.find(params['user_id']).profile) )
+    if params['user_id']# && ( current_user.role?(:admin) || can?(params[:action].to_sym, User.find(params['user_id']).profile) )
       @profile = User.find(params['user_id']).profile
     else
       @profile = current_user.profile

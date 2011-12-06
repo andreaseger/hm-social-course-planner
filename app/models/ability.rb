@@ -6,7 +6,12 @@ class Ability
     if user.role? :admin
       can :manage, :all
     else
-      can :read, Group
+      #can :read, Group
+      #can :read, Booking
+      #can :read, Teacher
+      #can :read, Room
+      #can :read, Timeslot
+      #can :read, Day
 
       can :manage, User do |u|
         u == user
@@ -16,14 +21,14 @@ class Ability
         user.profile == profile
       end
       can :manage, Schedule do |schedule|
-        schedule.try(:user) == user
+        user.schedule == schedule
       end
 
       can [:show,:read], Schedule do |schedule|
-        schedule.try(:user).is_classmate_with user
+        schedule.user.is_classmate_with user
       end
       can [:show,:read], Profile do |profile|
-        profile.try(:user).is_classmate_with user
+        profile.user.is_classmate_with user
       end
     end
   end

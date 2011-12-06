@@ -16,8 +16,8 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    flash[:error] = "Access denied!"
-      redirect_to current_user ? root_url : login_url
-  end
+  #rescue_from CanCan::AccessDenied do |exception|
+  #  flash[:error] = "Access denied!"
+  #    redirect_to current_user ? root_url : login_url
+  #end
 end

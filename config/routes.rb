@@ -26,7 +26,7 @@ SocialCoursePlanner::Application.routes.draw do
 
   resources :groups
 
-  root :to => 'schedules#show'
+  root :to => 'rooms#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
