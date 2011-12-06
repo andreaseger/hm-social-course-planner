@@ -1,61 +1,61 @@
-function renderSchedule(groupId) {
-    $('#content').empty();
+function renderScheduleData(data, interactive) {
+    $('#content').empty();    
     
-    $.getJSON('/groups/' + groupId + '.json', null, function(data) {
-        createTimeslotDivs();
-        createDayDivs();
-        $('#day1').append('<h2>Montag</h2>');
-        $('#day2').append('<h2>Dienstag</h2>');
-        $('#day3').append('<h2>Mittwoch</h2>');
-        $('#day4').append('<h2>Donnerstag</h2>');
-        $('#day5').append('<h2>Freitag</h2>');   
-        
-        for(var b = 0; b < data.bookings.length; b++) {
-            var booking = data.bookings[b];
-            
-            var timeslotId = "timeslot-" + booking.timeslot.day.id + "-" + booking.timeslot.start_time;
-            
-            var tmp = $("#" + timeslotId);
-            var timeslotList;
-            
-            if (tmp.length) {
-                timeslotList = $(tmp[0]);
-            } else {
-                timeslotList = $(document.createElement("ul"));
-                timeslotList.addClass('timeslot');
-                timeslotList.attr('id', timeslotId);
-                timeslotList.addClass('start-' + booking.timeslot.start_time);
-                timeslotList.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
-                $('#day' + booking.timeslot.day.id).append(timeslotList);                
-            }
-            
-            var div = $(document.createElement('div'));
-            div.attr('id', 'booking-' + booking.id);
-            div.append('<div class="booking-title"><strong>' + booking.course.label + '</strong></div>');
-            div.append('<div class="booking-timeslot">' + booking.timeslot.start_label + ' - ' + booking.timeslot.end_label + '</div>')
-            div.addClass('booking');
-            div.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
-            
-            if (booking.selected) {
-                div.addClass("booking-selected");
-            }
-            
-            var li = $(document.createElement("li"));
-            li.append(div);
-            timeslotList.append(li);
-            
+    createTimeslotDivs();
+    createDayDivs();
+    $('#day1').append('<h2>Montag</h2>');
+    $('#day2').append('<h2>Dienstag</h2>');
+    $('#day3').append('<h2>Mittwoch</h2>');
+    $('#day4').append('<h2>Donnerstag</h2>');
+    $('#day5').append('<h2>Freitag</h2>');   
+
+    for(var b = 0; b < data.bookings.length; b++) {
+        var booking = data.bookings[b];
+
+        var timeslotId = "timeslot-" + booking.timeslot.day.id + "-" + booking.timeslot.start_time;
+
+        var tmp = $("#" + timeslotId);
+        var timeslotList;
+
+        if (tmp.length) {
+            timeslotList = $(tmp[0]);
+        } else {
+            timeslotList = $(document.createElement("ul"));
+            timeslotList.addClass('timeslot');
+            timeslotList.attr('id', timeslotId);
+            timeslotList.addClass('start-' + booking.timeslot.start_time);
+            timeslotList.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
+            $('#day' + booking.timeslot.day.id).append(timeslotList);                
+        }
+
+        var div = $(document.createElement('div'));
+        div.attr('id', 'booking-' + booking.id);
+        div.append('<div class="booking-title"><strong>' + booking.course.label + '</strong></div>');
+        div.append('<div class="booking-timeslot">' + booking.timeslot.start_label + ' - ' + booking.timeslot.end_label + '</div>')
+        div.addClass('booking');
+        div.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
+
+        if (booking.selected) {
+            div.addClass("booking-selected");
+        }
+
+        var li = $(document.createElement("li"));
+        li.append(div);
+        timeslotList.append(li);
+
+        if (interactive) {
             $('#booking-' + booking.id).click(function() {
                 var id = parseInt($(this).attr('id').substr(8));
-                
-                var data;
-                
-                if ($(this).is('.selected')) {
-                    data = {
+
+                var jsonData;
+
+                if ($(this).is('.booking-selected')) {
+                    jsonData = {
                         add_bookings: [],
                         remove_bookings: [ id ]                        
                     };
                 } else {
-                    data = {
+                    jsonData = {
                         add_bookings: [ id ],
                         remove_bookings: []                        
                     };
@@ -63,15 +63,35 @@ function renderSchedule(groupId) {
                 $('#wait').show();
                 $.ajax({
                     url: '/user/schedule.json',
-                    data: data,
+                    data: jsonData,
                     type: 'PUT',
-                    complete: function() { $('#wait').hide(); }
-                });
+                    complete: function() { 
+                        $('#wait').hide();
+                    }
+                });                
 
-                $(this).toggleClass('selected');                
-            })
+                $(this).toggleClass('booking-selected');                
+            });
         }
+    }    
+}
+
+function renderClassmateSchedule(url) {
+    $.getJSON(url + '.json', null, function(data) {
+        renderScheduleData(data, true);
+    });    
+}
+
+function renderSchedule(groupId) {
+    $.getJSON('/groups/' + groupId + '.json', null, function(data) {
+        renderScheduleData(data, true);
     });
+}
+
+function renderOwnSchedule() {
+    $.getJSON('/user/schedule.json', null, function(data) {
+        renderScheduleData(data, false);
+    });    
 }
 
 function calculateLength(start, end) {

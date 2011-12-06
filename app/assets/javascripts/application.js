@@ -18,4 +18,23 @@ $(function() {
 
         $('#left').append($(ul));
     });
+    
+    $("#user-schedule-link").click(function() {
+        renderOwnSchedule();
+        return false;
+    });
+    
+    $('#classmate-schedule-link').click(function() {
+        renderClassmateSchedule($(this).attr('href'));
+        return false;
+    });
+    
+    $('#notice').click(function() {
+        $(this).hide();
+    });
+    
+    $('#error').click(function() {
+        $(this).hide();
+    });
+    
 });

@@ -14,7 +14,6 @@
 body
   .container
     +container
-    +susy-grid-background
 
     #title
       +alpha
@@ -25,6 +24,7 @@ body
       +omega
       +columns(7)
       +horizontal-list
+      padding-top: 1em
       li
         float: right
         margin-left: 1em
@@ -33,13 +33,19 @@ body
       +full
 
     #left
+      border-style: solid
+      border-width: 1px
+      border-radius: 5px
       +alpha
       +columns(1)
+      
+      ul
+        list-style-type: none
+        margin-left: 1em
 
     #content
       +columns(11)
       +omega
-
 
 #wait
   z-index: 10000

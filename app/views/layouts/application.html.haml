@@ -28,7 +28,7 @@
   .container
     #header
       %h1#title
-        = link_to "Social course planner", root_url
+        Social Course Planner
 
       %nav
         -if signed_in?
@@ -39,7 +39,7 @@
           %li
             = link_to 'Profile', user_profile_url
           %li
-            = link_to 'Schedule', user_schedule_url
+            = link_to 'Schedule', user_schedule_url, :id => 'user-schedule-link'
           %li
             Role:
             = current_user.roles.join ' '
@@ -47,10 +47,6 @@
           %li
             = link_to 'Login', login_url
 
-    -if error
-      %p#error= error
-    -if notice
-      %p#notice= notice
     %div{:role => "main", :id => "main"}
       #left
         

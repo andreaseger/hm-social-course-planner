@@ -5,10 +5,6 @@
   %strong Email:
   = @user.email
 
-%p
-  %strong Id:
-  = @user.id
-
 #accepted_classmates
   %strong
     = pluralize(@user.accepted_classmates.count, "Classmate")
@@ -17,15 +13,15 @@
       %li.classmate
         %span.name=mate.fullname
         %span.profile_link= link_to "Profile", user_alt_profile_url(mate)
-        %span.schedule_link= link_to "Schedule", user_alt_schedule_url(mate)
+        %span.schedule_link= link_to "Schedule", user_alt_schedule_url(mate), :id => 'classmate-schedule-link'
         %span.remove_link
           = link_to "remove", @user.relationships.where(classmate_id: mate.id).first, :confirm => 'Are you sure you want to remove this classmate?', :method => :delete, :class => "remove"
 
 
 #pending_classmates
-  %strong
-    Pending
+  %strong    
     = pluralize(@user.pending_classmates.count, "Classmate")
+    pending
   %ul
     - @user.pending_classmates.each do |mate|
       %li.classmate
@@ -35,8 +31,8 @@
 
 #classmate_requests
   %strong
-    Classmate
     = pluralize(@user.classmate_requests.count, "Request")
+    from classmates
   %ul
     - @user.classmate_requests.each do |mate|
       %li.classmate
