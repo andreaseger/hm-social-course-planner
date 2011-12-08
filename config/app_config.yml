@@ -1,9 +1,0 @@
-common: &common
-  author: John Doe
-
-development:
-  <<: *common
-test:
-  <<: *common
-production:
-  <<: *common

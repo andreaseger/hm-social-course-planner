@@ -28,8 +28,10 @@ namespace :data do
           time_conditions = { start_label: booking.xpath('starttime').text,
                               end_label: booking.xpath('stoptime').text,
                               day_id: day.id }
-          time = Timeslot.find(:first, conditions: time_conditions ) || Timeslot.create( time_conditions.merge( start_time: booking.xpath('starttime').text.gsub(':','').to_i,
-                                                                                                                end_time: booking.xpath('stoptime').text.gsub(':','').to_i ) )
+          time = Timeslot.find(:first, conditions: time_conditions ) || Timeslot.create( time_conditions.merge( start_minute: booking.xpath('starttime').text.split(':')[1].to_i,
+                                                                                                                start_hour: booking.xpath('starttime').text.split(':')[0].to_i,
+                                                                                                                end_minute: booking.xpath('stoptime').text.split(':')[1].to_i,
+                                                                                                                end_hour: booking.xpath('stoptime').text.split(':')[0].to_i ) )
 
           group = Group.find_or_create_by_name(c.xpath('group').text)
           conditions ={
@@ -64,6 +66,7 @@ namespace :data do
       [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
         print "\n[INFO] #{c.count} #{c.to_s.pluralize}"
       end
+      p "\n---"
     rescue => e
       print "\n[ERROR] main: #{e.message}"
       p e.backtrace

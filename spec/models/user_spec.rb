@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
   context '#validations' do
-    %w(username email).each do |a|
+    %w(username).each do |a|
       it "should have at least a #{a}" do
         FactoryGirl.build(:user, a => nil).should_not be_valid
       end

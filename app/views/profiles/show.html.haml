@@ -6,11 +6,11 @@
   = @profile.lastname
 %p
   %b Website:
-  = @profile.website
+  = link_to @profile.website, @profile.website, :target => '_blank'
 
 %p
   %b Twitter:
-  = @profile.twitter
+  = link_to "@#{@profile.twitter}", "http://twitter.com/#{@profile.twitter}", :target => '_blank' if @profile.twitter
 %p
   %b Bio:
   = @profile.bio

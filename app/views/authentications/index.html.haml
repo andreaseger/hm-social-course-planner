@@ -16,11 +16,21 @@
   %p
     %strong Sign in through one of these services:
 
--%w(open_id github).each do |provider|
+-%w(github twitter facebook).each do |provider|
+  - next unless APP_CONFIG.auth[provider]
   = link_to "/auth/#{provider}", {:class => 'auth_provider'} do
-    = image_tag "authbuttons/#{provider}_64.png", :size => "64x64", :alt => "#{provider == 'open_id' ? 'OpenID' : provider.titleize}"
-    = provider == 'open_id' ? 'OpenID' : provider.titleize
-- unless Rails.env == :production
+    = image_tag "authbuttons/#{provider}_64.png", :size => "64x64", :alt => "#{provider.titleize}"
+    =provider.titleize
+
+- unless APP_CONFIG.auth['google_oauth2']
+  = link_to "/auth/google_oauth2", {:class => 'auth_provider'} do
+    = image_tag "authbuttons/google_64.png", :size => "64x64", :alt => "Google OAuth2"
+    Google
+= link_to "/auth/open_id", {:class => 'auth_provider'} do
+  = image_tag "authbuttons/open_id_64.png", :size => "64x64", :alt => 'OpenID'
+  OpenID
+
+- if Rails.env.test?
   = link_to "/auth/developer", {:class => 'auth_provider'} do
     = image_tag "authbuttons/developer_64.png", :size => "64x64", :alt => "Developer"
     Developer

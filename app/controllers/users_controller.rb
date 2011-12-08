@@ -1,15 +1,16 @@
 class UsersController < ApplicationController
   before_filter :load_and_authorize, except: :index
-  def index
-    @users = User.all
-    authorize! :index, User
+  #def index
+  #  @users = User.all
+  #  authorize! :index, User
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
-    end
+  #  respond_to do |format|
+  #    format.html # show.html.erb
+  #    format.json { render json: @user }
+  #  end
+  #end
 
-  end
+
   # GET /users/1
   # GET /users/1.json
   def show
@@ -43,7 +44,7 @@ class UsersController < ApplicationController
     @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to root_url }
       format.json { head :ok }
     end
   end

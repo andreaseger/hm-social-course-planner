@@ -24,12 +24,13 @@ gem 'haml-rails'
 gem 'modernizr-rails'
 
 #Authentication
-gem 'omniauth-identity', :git => 'git://github.com/intridea/omniauth-identity.git'
+gem 'omniauth-identity'#, :git => 'git://github.com/intridea/omniauth-identity.git'
 gem "bcrypt-ruby", :require => "bcrypt"
-gem 'omniauth-github', :git => 'git://github.com/intridea/omniauth-github.git'
-gem 'omniauth-openid', :git => 'git://github.com/intridea/omniauth-openid.git'
+gem 'omniauth-github'#, :git => 'git://github.com/intridea/omniauth-github.git'
+gem 'omniauth-openid'#, :git => 'git://github.com/intridea/omniauth-openid.git'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 
 #Authorization
 gem 'cancan'

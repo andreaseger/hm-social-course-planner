@@ -9,7 +9,20 @@ Uses the open data from the [Univerity of Applied Science Faculty 07](http://fi.
 
 - Ruby > 1.9 (app is using the new hash and lambda syntax)
 - Bundler
-- a Github API Key ( [get one here](https://github.com/account/applications/new) ) without the github authentication will not work
+
+###Auth Keys
+
+- [Github](https://github.com/account/applications/new)
+- [Twitter](https://dev.twitter.com/apps)
+- [Facebook](https://developers.facebook.com/apps)
+- [Google OAuth2](https://code.google.com/apis/console#access)
+
+Make sure for each key that the callback url points to
+/auth/:provider/callback for example /auth/googel_oauth2/callback
+
+In Development also make sure you add the correct Port to the urls. Some
+services don't work with localhost or 127.0.0.1 as url, use here lvh.me
+instead.
 
 ##Setup
 
@@ -22,9 +35,7 @@ bundle install
 
 bundle exec rake setup
 
-# setup your github key
-export GITHUB_KEY='GITHUB_CLIENT_ID'
-export GITHUB_SECRET='GITHUB_SECRET'
+# setup your auth keys -> config/app_config.yml
 
 bundle exec rails s -p4567 thin
 ```
@@ -33,8 +44,6 @@ now go to **lvh.me:4567** and start using the app
 
 ##ToDo
 
-- authbutton for email/password auth(Identity)
-- custom forms for Identity auth
 - easy way to mark related courses
 - easy way to detect and mark conflicting courses
 

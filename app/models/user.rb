@@ -8,7 +8,6 @@ class User < ActiveRecord::Base
   before_create :build_default_profile_and_schedule
 
   validates :username, presence: true
-  validates :email, presence: true
 
   scope :with_classmate_requests, -> user {
     joins(:relationships).where("relationships.classmate_id = ?", user.id ).where("relationships.user_id != ?",user.id)
@@ -38,7 +37,35 @@ class User < ActiveRecord::Base
   end
 
   def self.create_from_hash!(hash)
-    create( username: hash['info']['name'], email: hash['info']['email'] )
+    info = OpenStruct.new hash['info']
+
+    case hash['provider']
+    when 'twitter'
+      u = create( username: info.nickname )
+      u.profile.update_attributes(firstname: info.name, bio: info.description, twitter: info.nickname, website: info.urls["Twitter"] )
+      u
+    when 'facebook'
+      u = create( username: info.nickname, email: info.email)
+      u.profile.update_attributes(firstname: info.first_name, lastname: info.last_name, website: info.urls["Facebook"] )
+      u
+    when 'github'
+      u = create( username: info.nickname, email: info.email)
+      names = info.name.split ' '
+      u.profile.update_attributes(firstname: names[0], lastname: names[1], website: info.urls["GitHub"] )
+      u
+    when 'identity'
+      create( username: info.name, email: info.email )
+    when 'google_oauth2'
+      u = create( username: info.name, email: info.email)
+      u.profile.update_attributes(firstname: info.first_name, lastname: info.last_name, website: hash['extra']['raw_info']['link'] )
+      u
+    when :open_id
+      u = create( username: info.name, email: info.email)
+      u.profile.update_attributes(firstname: info.first_name, lastname: info.last_name )
+      u
+    else
+      create( username: info.name, email: info.email )
+    end
   end
 
   def fullname

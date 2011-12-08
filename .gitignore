@@ -4,6 +4,8 @@ log/*.log
 tmp/
 coverage/
 .sass-cache/
-config/database.ymlconfig/deploy.rb
+config/database.yml
+config/deploy.rb
+config/app_config.yml
 vendor/bundle/
 nbproject/

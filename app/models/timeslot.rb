@@ -23,8 +23,12 @@ class Timeslot < ActiveRecord::Base
     end_hour*100+end_minute
   end
 
+  def length
+    (end_hour*60+end_minute)-(start_hour*60+start_minute)
+  end
+
   def as_json(options=nil)
-    options ||= { methods: :day, except: [:created_at, :updated_at] }
+    options ||= { methods: [:day, :length], except: [:created_at, :updated_at] }
     super(options)
   end
 
