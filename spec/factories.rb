@@ -16,10 +16,12 @@ FactoryGirl.define do
     name
   end
   factory :timeslot do
-    sequence(:start_label) { |n| "10:0#{n}" }
-    sequence(:end_label) { |n| "11:3#{n}" }
-    sequence(:start_time) { |n| 1000 + n }
-    sequence(:end_time) { |n| 1130 + n }
+    sequence(:start_hour) { |n| n%24 }
+    sequence(:end_hour) { |n| (n+1)%14 }
+    sequence(:start_minute) { |n| [0,15,30,45][n%3] }
+    sequence(:end_minute)   { |n| [0,15,30,45][n%3] }
+    start_label { "#{start_hour}:#{start_minute}" }
+    end_label { "#{end_hour}:#{end_minute}" }
     day
   end
   factory :day do

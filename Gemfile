@@ -28,8 +28,8 @@ gem 'omniauth-identity', :git => 'git://github.com/intridea/omniauth-identity.gi
 gem "bcrypt-ruby", :require => "bcrypt"
 gem 'omniauth-github', :git => 'git://github.com/intridea/omniauth-github.git'
 gem 'omniauth-openid', :git => 'git://github.com/intridea/omniauth-openid.git'
-#gem 'omniauth-twitter'
-#gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
 
 #Authorization
 gem 'cancan'
@@ -57,4 +57,6 @@ group :test do
   gem 'factory_girl_rails'
   gem 'spork', '>= 0.9.0.rc'
   gem 'guard-rspec'
+  gem 'timecop'
+  #gem 'fakeweb'
 end

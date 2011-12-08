@@ -1,3 +1,15 @@
+-unless @timeslots.empty?
+  %h2
+    Currently free Rooms in the following Timeslots
+  #timeslots
+    %ul
+      -@timeslots.each do |slot|
+        %li
+          = slot.day.label
+          = slot.start_label
+          -
+          = slot.end_label
+
 %ul.rooms
   - @rooms.each do |room|
     %li=room.label

@@ -5,8 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Day.create!( name: 'mo', label: 'Montag' )
-Day.create!( name: 'di', label: 'Dienstag' )
-Day.create!( name: 'mi', label: 'Mittwoch' )
-Day.create!( name: 'do', label: 'Donnerstag' )
-Day.create!( name: 'fr', label: 'Freitag' )
+Day.create!( id: 1, name: 'mo', label: 'Montag' )
+Day.create!( id: 2, name: 'di', label: 'Dienstag' )
+Day.create!( id: 3, name: 'mi', label: 'Mittwoch' )
+Day.create!( id: 4, name: 'do', label: 'Donnerstag' )
+Day.create!( id: 5, name: 'fr', label: 'Freitag' )
