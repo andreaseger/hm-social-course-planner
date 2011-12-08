@@ -1,7 +1,7 @@
 rvm:
   - 1.9.3
 before_script:
-  - "mv config/database.travis config/database.yml"
+  - "cp config/database.travis config/database.yml"
   - "psql -c 'create database course_planner_test;' -U postgres"
   - "bundle exec rake db:migrate"
 notifications:
