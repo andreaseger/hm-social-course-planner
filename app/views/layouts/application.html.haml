@@ -20,7 +20,7 @@
   = stylesheet_link_tag "application"
   = stylesheet_link_tag "group"
   = yield :stylesheet
-  = javascript_include_tag "modernizr"
+  =# javascript_include_tag "modernizr"
   = csrf_meta_tags
 %body
   #wait
@@ -28,7 +28,7 @@
   .container
     #header
       %h1#title
-        Social Course Planner
+        Social Course Planner beta
 
       %nav
         -if signed_in?
