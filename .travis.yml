@@ -5,6 +5,7 @@ before_script:
   - cp config/database.travis config/database.yml
   - psql -c 'create database course_planner_test;' -U postgres
   - bundle exec rake db:migrate
+script: "bundle exec rake spec"
 
 notifications:
   email:
