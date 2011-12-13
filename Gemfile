@@ -35,6 +35,7 @@ gem 'cancan'
 
 group :production, :test do
   gem 'pg'
+  gem 'unicorn'
 end
 group :development do
   gem "capistrano"
