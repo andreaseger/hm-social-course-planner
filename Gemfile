@@ -5,8 +5,6 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
 gem 'nokogiri', :require => false
 # Gems used only for assets and not required
 # in production environments by default.
@@ -59,5 +57,4 @@ group :test do
   gem 'spork', '>= 0.9.0.rc'
   gem 'guard-rspec'
   gem 'timecop'
-  #gem 'fakeweb'
 end

@@ -7,5 +7,7 @@ coverage/
 config/database.yml
 config/deploy.rb
 config/app_config.yml
+config/newrelic.yml
+config/unicorn.rb
 vendor/bundle/
 nbproject/
