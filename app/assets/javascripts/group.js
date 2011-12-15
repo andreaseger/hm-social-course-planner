@@ -30,8 +30,10 @@ function renderScheduleData(data, interactive) {
 
         var div = $(document.createElement('div'));
         div.attr('id', 'booking-' + booking.id);
-        div.append('<div class="booking-title"><strong>' + booking.course.label + '</strong></div>');
+        div.append('<div class="booking-title"><strong><a href="http://fi.cs.hm.edu/fi/rest/public/modul/title/' + booking.course.name + '/" target="_blank">' + booking.course.label + '</a></strong></div>');
         div.append('<div class="booking-timeslot">' + booking.timeslot.start_label + ' - ' + booking.timeslot.end_label + '</div>')
+        div.append('<div class="booking-teacher"><a href="http://fi.cs.hm.edu/fi/rest/public/timetable/name/' + booking.teachers[0].name + '/" target="_blank">' + booking.teachers[0].label + '</a></div>');
+        div.append('<div class="booking-room"><a href="http://fi.cs.hm.edu/fi/rest/public/timetable/room/' + booking.room.name + '/" target="_blank">' + booking.room.label + '</a></div>');
         div.addClass('booking');
         div.addClass('length-' + calculateLength(booking.timeslot.start_time, booking.timeslot.end_time));
 

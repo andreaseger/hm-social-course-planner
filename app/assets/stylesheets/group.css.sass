@@ -7,7 +7,8 @@ ul.timeslot
   list-style-type: none
   margin: 0em
   padding: 0em
-  overflow: auto
+  overflow: hidden  
+  overflow-y: auto
   position: absolute
   background-color: white
   border-style: solid
@@ -25,56 +26,58 @@ div.booking
 div.booking-selected
   background-color: green
 
+$timeslot_height: 5em
 #timeslot0
-  height: 3em
+  height: $timeslot_height
 #timeslot1
-  height: 3em
+  height: $timeslot_height
 #timeslot2
-  height: 3em
+  height: $timeslot_height
 #timeslot3
-  height: 3em
+  height: $timeslot_height
 #timeslot4
-  height: 3em
+  height: $timeslot_height
 #timeslot5
-  height: 3em
+  height: $timeslot_height
 #timeslot6
-  height: 3em
+  height: $timeslot_height
 
 .length-90
-  height: 3em
+  height: $timeslot_height
 
 .length-195
-  height: 7em
+  height: $timeslot_height * 2.2
 
+$offset: 1.2
 .start-815
-  top: 6em
+  top: $timeslot_height + $offset
 
 .start-1000
-  top: 9em
+  top: $timeslot_height * 2 + $offset
 
 .start-1145
-  top: 12em
+  top: $timeslot_height * 3 + $offset
 
 .start-1330
-  top: 15em
+  top: $timeslot_height * 4 + $offset
 
 .start-1430
-  top: 17em
+  top: $timeslot_height * 4.25 + $offset
 
 .start-1515
-  top: 18em
+  top: $timeslot_height * 5 + $offset
 
 .start-1545
-  top: 19em
+  top: $timeslot_height * 5.25 + $offset
 
 .start-1615
-  top: 19em
+  top: $timeslot_height * 5.5 + $offset
 
 .start-1700
-  top: 21em
+  top: $timeslot_height * 6 + $offset
 
 .start-1845
-  top: 24em
+  top: $timeslot_height * 7 + $offset
 
 #timeslots
   padding-top: 2em  
