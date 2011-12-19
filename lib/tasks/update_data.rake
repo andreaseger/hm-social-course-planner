@@ -1,4 +1,15 @@
 namespace :data do
+  desc "create some fake users and add bookings to them"
+  task :generate_fake_user => :environment do
+    require 'faker'
+    all_bookings = Booking.all
+    25.times do
+      user = User.create( username: Faker::Internet.user_name, email: Faker::Internet.free_email )
+      user.schedule.bookings << all_bookings.sample(8)
+    end
+    print "user erstellt\n"
+  end
+
   desc "download master data and update the database"
   task :update => :environment do
     require 'net/http'
@@ -52,7 +63,7 @@ namespace :data do
             if b.save
               print '.'
             else
-              binding.pry
+              #binding.pry
               p b.errors
               exit 1
             end
@@ -66,19 +77,11 @@ namespace :data do
       [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
         print "\n[INFO] #{c.count} #{c.to_s.pluralize}"
       end
-      p "\n---"
+      print "\n---\n"
     rescue => e
       print "\n[ERROR] main: #{e.message}"
       p e.backtrace
     end
-  end
-
-  def mark_data_as_orphin
-    #TODO
-  end
-
-  def delete_orphans
-    #[Booking, Room, Timeslot, Course, Teacher].each {|m| m.delete_if{|e| e.orphan} }
   end
 
   def get(url)

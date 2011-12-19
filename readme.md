@@ -26,7 +26,7 @@ instead.
 
 ##Setup
 
-discard *bunde exec* if you are using [rvm](http://beginrescueend.com/)
+discard *bundle exec* if you are using [rvm](http://beginrescueend.com/)
 
 ```sh
 git clone git://github.com/sch1zo/hm-social-course-planner.git
@@ -40,6 +40,7 @@ bundle exec rake setup
 bundle exec rails s -p4567 thin
 ```
 
+If you want ro generate some fake userser simply run *bundle exec rake data:generate_fake_user*
 now go to **lvh.me:4567** and start using the app
 
 ##ToDo
