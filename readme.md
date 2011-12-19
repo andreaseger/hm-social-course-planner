@@ -40,7 +40,7 @@ bundle exec rake setup
 bundle exec rails s -p4567 thin
 ```
 
-If you want ro generate some fake userser simply run *bundle exec rake data:generate_fake_user*
+If you want ro generate some fake user simply run *bundle exec rake data:generate_fake_user*
 now go to **lvh.me:4567** and start using the app
 
 ##ToDo
