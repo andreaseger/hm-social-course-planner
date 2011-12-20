@@ -1,3 +1,5 @@
+// require normalize
+// require common
 //= require_self
 //= require authentications
 
@@ -6,10 +8,11 @@
 //= depend_on base
 //= depend_on defaults
 //= depend_on authentications
+//= depend_on normalize
 
-@import normalize
-@import common
-@import defaults
+@import normalize.css.sass
+@import common.css.sass
+@import defaults.css.sass
 
 body
   .container
