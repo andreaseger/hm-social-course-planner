@@ -1,32 +1,8 @@
 SocialCoursePlanner::Application.routes.draw do
-  get 'rooms' => "rooms#index"
-  resources :identities
-
-  resources :relationships
-  resource :user do
-    resource :schedule
-    resource :profile
-  end
-  resources :users do
-    get 'schedule' => 'schedules#show', :as => :alt_schedule
-    get 'schedule/edit' => 'schedules#edit', :as => :alt_edit_schedule
-    put 'schedule' => 'schedules#update'
-    get 'profile' => 'profiles#show', :as => :alt_profile
-    get 'profile/edit' => 'profiles#edit', :as => :alt_edit_profile
-    put 'profile' => 'profiles#update'
-  end
-
-  resources :sessions
-  resources :authentications
-  match "/logout" => "sessions#destroy", :as => :logout
-  match "/login" => "authentications#index", :as => :login
-
-  match '/auth/:provider/callback' => 'sessions#create'
-  get '/auth/failure' => redirect("/login")
-
+  resources :schedule
   resources :groups
 
-  root :to => 'rooms#index'
+  root :to => 'groups#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

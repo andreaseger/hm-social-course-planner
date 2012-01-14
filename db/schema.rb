@@ -11,17 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111207220751) do
-
-  create_table "authentications", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "provider"
-    t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
+ActiveRecord::Schema.define(:version => 20120114025753) do
 
   create_table "bookings", :force => true do |t|
     t.integer  "course_id"
@@ -29,8 +19,9 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
     t.integer  "room_id"
     t.integer  "group_id"
     t.string   "suffix"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.boolean  "obsolete"
   end
 
   add_index "bookings", ["course_id"], :name => "index_bookings_on_course_id"
@@ -46,8 +37,8 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
   create_table "courses", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "courses", ["name"], :name => "index_courses_on_name", :unique => true
@@ -55,29 +46,19 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
   create_table "days", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "days", ["name"], :name => "index_days_on_name", :unique => true
 
   create_table "groups", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true
-
-  create_table "identities", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "password_digest"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "identities", ["email"], :name => "index_identities_on_email", :unique => true
 
   create_table "lectureships", :force => true do |t|
     t.integer "booking_id"
@@ -86,45 +67,21 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
 
   add_index "lectureships", ["booking_id", "teacher_id"], :name => "index_lectureships_on_booking_id_and_teacher_id", :unique => true
 
-  create_table "profiles", :force => true do |t|
-    t.string   "firstname"
-    t.string   "lastname"
-    t.string   "website"
-    t.string   "twitter"
-    t.text     "bio"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "profiles", ["user_id"], :name => "index_profiles_on_user_id"
-
-  create_table "relationships", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "classmate_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "relationships", ["classmate_id"], :name => "index_relationships_on_classmate_id"
-  add_index "relationships", ["user_id", "classmate_id"], :name => "index_relationships_on_user_id_and_classmate_id", :unique => true
-  add_index "relationships", ["user_id"], :name => "index_relationships_on_user_id"
-
   create_table "rooms", :force => true do |t|
     t.string   "name"
     t.string   "label"
     t.string   "building"
     t.integer  "floor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "rooms", ["name"], :name => "index_rooms_on_name", :unique => true
 
   create_table "schedules", :force => true do |t|
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "schedules", ["user_id"], :name => "index_schedules_on_user_id"
@@ -132,8 +89,8 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
   create_table "teachers", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "teachers", ["name"], :name => "index_teachers_on_name", :unique => true
@@ -144,8 +101,8 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
     t.string   "start_label"
     t.string   "end_label"
     t.integer  "day_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "start_minute"
     t.integer  "end_minute"
     t.integer  "start_hour"
@@ -153,13 +110,5 @@ ActiveRecord::Schema.define(:version => 20111207220751) do
   end
 
   add_index "timeslots", ["start_label", "end_label", "day_id"], :name => "index_timeslots_on_start_label_and_end_label_and_day_id", :unique => true
-
-  create_table "users", :force => true do |t|
-    t.string   "username"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "roles_mask"
-    t.string   "email"
-  end
 
 end

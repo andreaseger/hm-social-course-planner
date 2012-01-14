@@ -1,11 +1,10 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.0.rc2'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'nokogiri', :require => false
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -19,20 +18,9 @@ group :assets do
 end
 
 gem 'jquery-rails'
-gem 'haml-rails'
 gem 'modernizr-rails'
-
-#Authentication
-gem 'omniauth-identity'#, :git => 'git://github.com/intridea/omniauth-identity.git'
-gem "bcrypt-ruby", :require => "bcrypt"
-gem 'omniauth-github'#, :git => 'git://github.com/intridea/omniauth-github.git'
-gem 'omniauth-openid'#, :git => 'git://github.com/intridea/omniauth-openid.git'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
-
-#Authorization
-gem 'cancan'
+gem 'mustache'
+gem 'nokogiri', :require => false
 
 group :production, :test do
   gem 'pg'
@@ -60,5 +48,3 @@ group :test do
   gem 'guard-rspec'
   gem 'timecop'
 end
-
-gem 'faker'

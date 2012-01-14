@@ -29,30 +29,6 @@ FactoryGirl.define do
     label "Lorem Ipsum"
   end
 
-  factory :authentication do
-    provider "developer"
-    sequence(:uid) { |n| "foo#{n}" }
-  end
-
-  factory :profile do
-    firstname "Foo"
-    lastname "Bar"
-    website "http://twitter.com/sch1zo"
-    twitter "sch1zo"
-    bio "Lorem Ipsum"
-  end
-
-  factory :user do
-    sequence(:username) { |n| "foo#{n}" }
-    email { "#{username}@test.com" }
-  end
-  factory :user_with_profile, parent: :user do
-    association :profile, factory: :profile, method: :build
-  end
-  factory :user_with_auth, parent: :user_with_profile do |user|
-    after_create {|user| user.authentications << Factory(:authentication, user: user) }
-  end
-
   factory :teacher do
     name
     label "Lorem Ipsum"
@@ -75,9 +51,5 @@ FactoryGirl.define do
 
   factory :schedule_with_bookings, parent: :schedule do
     after_build {|schedule| schedule.bookings << Factory(:booking_with_teacher) }
-  end
-
-  factory :user_with_classmate, parent: :user do
-    after_build {|user| user.classmates << Factory(:user) }
   end
 end

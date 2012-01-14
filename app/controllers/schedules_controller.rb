@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
-  before_filter :load_eager_and_authorize, only: :show
-  before_filter :load_and_authorize, except: :show
+  #before_filter :load_eager_and_authorize, only: :show
+  #before_filter :load_and_authorize, except: :show
   # GET /schedules/1
   # GET /schedules/1.json
   def show

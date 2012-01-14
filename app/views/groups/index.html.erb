@@ -1,0 +1,8 @@
+<div id="groups" data-json-url="<%= groups_url(:format => :json) %>">
+  <% @groups.each do |group| %>
+    <%= render "group", :mustache => group_for_mustache(group) %>
+  <% end %>
+</div>
+<script type="text/html" id="group_template">
+  <%= render "group" %>
+</script>

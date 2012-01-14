@@ -1,14 +1,4 @@
 namespace :data do
-  desc "create some fake users and add bookings to them"
-  task :generate_fake_user => :environment do
-    require 'faker'
-    all_bookings = Booking.all
-    25.times do
-      user = User.create( username: Faker::Internet.user_name, email: Faker::Internet.free_email )
-      user.schedule.bookings << all_bookings.sample(8)
-    end
-    print "user erstellt\n"
-  end
 
   desc "download master data and update the database"
   task :update => :environment do
@@ -17,8 +7,8 @@ namespace :data do
 
     print "[INFO] starting\n"
 
-    print "[INFO] deleting old bookings\n"
-    Booking.destroy_all
+    print "[INFO] mark old bookings\n"
+    Booking.update_all(obsolete: true)
     [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
       print "[INFO] #{c.count} #{c.to_s.pluralize}\n"
     end
@@ -58,12 +48,11 @@ namespace :data do
           end
           b = Booking.find( :first, conditions: conditions )
           if b.nil?
-            b = Booking.new( conditions )
+            b = Booking.new( conditions.merge(obsolete: false) )
             b.teachers << teachers
             if b.save
               print '.'
             else
-              #binding.pry
               p b.errors
               exit 1
             end
@@ -71,9 +60,11 @@ namespace :data do
             teachers.each do |teacher|
               b.teachers << teacher unless b.teachers.include?(teacher)
             end
+            b.update_attributes(obsolete: false)
           end
         end
       end
+      Booking.where(obsolete: true).destroy_all
       [Booking, Teacher, Room, Course, Group, Timeslot, Lectureship].each do |c|
         print "\n[INFO] #{c.count} #{c.to_s.pluralize}"
       end
